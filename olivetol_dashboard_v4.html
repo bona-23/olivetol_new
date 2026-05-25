@@ -1,0 +1,1300 @@
+<!DOCTYPE html>
+<html lang="ko"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Olivetol — Enformer LUAD 분석</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>body{font-family:"Inter",sans-serif;background:#ffffff;color:#1a1917;}</style>
+</head><body>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+.page{display:none}.page.active{display:block}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:0.5px solid #e0deda;position:sticky;top:0;background:#ffffff;z-index:10}
+.nav-logo{font-size:15px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:8px}
+.nav-back{font-size:13px;color:#6b6966;cursor:pointer;display:flex;align-items:center;gap:4px;padding:5px 10px;border:0.5px solid #e0deda;border-radius:8px}
+.nav-back:hover{background:#f5f5f4}
+.home-hero{padding:48px 24px 32px;text-align:center}
+.plan-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:0 24px 32px}
+.plan-card{border:0.5px solid #e0deda;border-radius:12px;padding:20px;cursor:pointer;background:#ffffff;transition:border-color .15s,background .15s}
+.plan-card:hover{border-color:#c8c5c0;background:#f5f5f4}
+.plan-card.disabled{opacity:.5;cursor:not-allowed}
+.plan-card.disabled:hover{background:#ffffff;border-color:#e0deda}
+.plan-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;font-size:18px}
+.plan-label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
+.plan-name{font-size:16px;font-weight:500;margin-bottom:8px}
+.plan-desc{font-size:12px;color:#6b6966;line-height:1.5;margin-bottom:12px}
+.plan-stats{display:flex;gap:8px;flex-wrap:wrap}
+.stat-pill{font-size:11px;padding:3px 8px;border-radius:20px;background:#f5f5f4;color:#6b6966}
+.coming-badge{font-size:10px;padding:2px 8px;border-radius:20px;background:#f5f5f4;color:#9c9895;display:inline-block;margin-top:8px}
+.inner{padding:16px 20px}
+.section-tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.stab{font-size:12px;padding:5px 12px;border-radius:8px;border:0.5px solid #e0deda;cursor:pointer;background:transparent;color:#6b6966}
+.stab.on{background:#e6f1fb;color:#185FA5;border-color:transparent}
+.subsec{display:none}.subsec.on{display:block}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.met{background:#f5f5f4;border-radius:8px;padding:11px 13px}
+.met-l{font-size:11px;color:#6b6966;margin-bottom:3px}
+.met-v{font-size:20px;font-weight:500}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.card{background:#ffffff;border:0.5px solid #e0deda;border-radius:12px;padding:13px 15px}
+.ct{font-size:11px;font-weight:500;color:#6b6966;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
+.full{grid-column:1/-1}
+.trow{display:flex;align-items:center;gap:7px;padding:4px 0;border-bottom:0.5px solid #e0deda;font-size:12px}
+.trow:last-child{border-bottom:none}
+.tnum{color:#9c9895;min-width:15px;text-align:right;font-size:11px}
+.tnm{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bw{flex:0 0 64px;height:5px;background:#e8e7e4;border-radius:3px;overflow:hidden}
+.bf{height:100%;border-radius:3px}
+.tv{font-size:11px;min-width:46px;text-align:right}
+.pos{color:#185FA5}.neg{color:#A32D2D}
+.lb{font-size:9px;background:#E1F5EE;color:#0F6E56;padding:1px 5px;border-radius:3px;flex-shrink:0}
+select{width:100%;margin-bottom:8px;font-size:13px}
+.tabr{display:flex;gap:6px;margin-bottom:8px}
+.tab{font-size:12px;padding:4px 10px;border-radius:8px;border:0.5px solid #e0deda;background:transparent;color:#6b6966;cursor:pointer}
+.tab.on{background:#e6f1fb;color:#185FA5;border-color:transparent}
+.insight-box{border-radius:8px;padding:10px 14px;margin-bottom:8px;border-left:3px solid #185FA5;background:#f5f5f4}
+.insight-title{font-size:12px;font-weight:500;margin-bottom:3px}
+.insight-sub{font-size:11px;color:#6b6966;line-height:1.5}
+</style>
+
+<h2 class="sr-only" style="display:none">올리베톨 Enformer LUAD 분석 웹사이트 — Plan A, Plan B KRAS G12C vs Q61L 포함</h2>
+
+<div id="home" class="page active">
+  <div class="nav">
+    <span class="nav-logo"><i class="ti ti-dna-2" aria-hidden="true"></i> Olivetol</span>
+    <span style="font-size:12px;color:#9c9895">CNU 학습동아리 2025</span>
+  </div>
+  <div class="home-hero">
+    <div style="font-size:12px;color:#9c9895;margin-bottom:10px;letter-spacing:.08em;text-transform:uppercase">Enformer 기반 폐암 유전변이 분석</div>
+    <div style="font-size:28px;font-weight:500;margin-bottom:8px;line-height:1.3">TCGA-LUAD<br>변이 분석 플랫폼</div>
+    <div style="font-size:14px;color:#6b6966;margin-top:10px;margin-bottom:4px">616명 환자 · 194,729개 변이 · DeepMind Enformer</div>
+    <div style="font-size:12px;color:#9c9895">정우진 · 김민채 · 이수민 · 장한얼</div>
+  </div>
+  <div class="plan-grid">
+    <div class="plan-card" onclick="goTo('planA')">
+      <div class="plan-icon" style="background:#E6F1FB"><i class="ti ti-search" style="color:#185FA5" aria-hidden="true"></i></div>
+      <div class="plan-label" style="color:#185FA5">Plan A</div>
+      <div class="plan-name">모델 체험</div>
+      <div class="plan-desc">TCGA-LUAD 변이를 Enformer에 넣어 epigenomic signal 변화를 예측하고 PCA-DBSCAN으로 클러스터링</div>
+      <div class="plan-stats">
+        <span class="stat-pill">616명 환자</span>
+        <span class="stat-pill">20개 드라이버 변이</span>
+        <span class="stat-pill">PCA-DBSCAN</span>
+      </div>
+    </div>
+    <div class="plan-card" onclick="goTo('planB')">
+      <div class="plan-icon" style="background:#EAF3DE"><i class="ti ti-chart-line" style="color:#3B6D11" aria-hidden="true"></i></div>
+      <div class="plan-label" style="color:#3B6D11">Plan B</div>
+      <div class="plan-name">신호 변화 분석</div>
+      <div class="plan-desc">13개 변이의 ATAC-seq, H3K27ac, H3K4me3 신호 변화 비교 — KRAS G12C/Q61L, Top 5 Mutations, 영향 범위 및 트랙 상관관계 분석</div>
+      <div class="plan-stats">
+        <span class="stat-pill">KRAS G12C/Q61L</span>
+        <span class="stat-pill">Top 5 변이</span>
+        <span class="stat-pill">영향 범위 분석</span>
+        <span class="stat-pill">상관관계</span>
+      </div>
+    </div>
+    <div class="plan-card" onclick="goTo('planC')">
+      <div class="plan-icon" style="background:#FAEEDA"><i class="ti ti-user-circle" style="color:#854F0B" aria-hidden="true"></i></div>
+      <div class="plan-label" style="color:#854F0B">Plan C</div>
+      <div class="plan-name">환자 맞춤형 분석</div>
+      <div class="plan-desc">Enformer risk score와 임상 정보를 통합해 생존 예측, 위험군 층화, 개인별 다차원 위험 레이더 구현</div>
+      <div class="plan-stats">
+        <span class="stat-pill">Kaplan-Meier</span>
+        <span class="stat-pill">생존 확률</span>
+        <span class="stat-pill">위험 레이더</span>
+        <span class="stat-pill">Cox 모델</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="planA" class="page">
+  <div class="nav">
+    <span class="nav-logo" onclick="goTo('home')"><i class="ti ti-dna-2" aria-hidden="true"></i> Olivetol</span>
+    <span class="nav-back" onclick="goTo('home')"><i class="ti ti-arrow-left" aria-hidden="true"></i> 홈으로</span>
+  </div>
+  <div class="inner">
+    <div style="margin-bottom:16px">
+      <div style="font-size:11px;color:#9c9895;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Plan A — 모델 체험</div>
+      <div style="font-size:18px;font-weight:500;margin-bottom:4px">Enformer 변이 분석 결과</div>
+      <div style="font-size:13px;color:#6b6966">TCGA-LUAD · DeepMind Enformer · epigenomic track perturbation</div>
+    </div>
+    <div class="section-tabs">
+      <button class="stab on" onclick="switchSec('patients',this)"><i class="ti ti-users" aria-hidden="true"></i> 616명 환자 현황</button>
+      <button class="stab" onclick="switchSec('chr7',this)"><i class="ti ti-chart-bar" aria-hidden="true"></i> chr7 변이 분석</button>
+      <button class="stab" onclick="switchSec('drivers',this)"><i class="ti ti-dna-2" aria-hidden="true"></i> 드라이버 유전자 분석</button>
+      <button class="stab" onclick="switchSec('pca',this)"><i class="ti ti-scatter-plot" aria-hidden="true"></i> PCA-DBSCAN 클러스터링</button>
+    </div>
+
+    <div id="sec-patients" class="subsec on">
+      <div class="metrics">
+        <div class="met"><div class="met-l">총 환자 수</div><div class="met-v" style="color:#185FA5">616명</div></div>
+        <div class="met"><div class="met-l">총 변이 수</div><div class="met-v" style="color:#185FA5">194,729</div></div>
+        <div class="met"><div class="met-l">평균 변이 수</div><div class="met-v">316.1</div></div>
+        <div class="met"><div class="met-l">분석 유전자</div><div class="met-v">18,000+</div></div>
+      </div>
+      <div class="g2">
+        <div class="card"><div class="ct">상위 20개 변이 유전자</div><div id="pt-genes"></div></div>
+        <div class="card"><div class="ct">핵심 드라이버 유전자</div><div id="pt-drivers"></div></div>
+        <div class="card full"><div class="ct">변이 종류별 분포</div><div style="position:relative;height:180px"><canvas id="pt-varclass" role="img" aria-label="변이 종류별 분포"></canvas></div></div>
+        <div class="card"><div class="ct">변이 타입</div><div style="position:relative;height:160px"><canvas id="pt-vartype" role="img" aria-label="변이 타입 분포"></canvas></div></div>
+        <div class="card"><div class="ct">염색체별 변이 수</div><div style="position:relative;height:160px"><canvas id="pt-chrom" role="img" aria-label="염색체별 변이 수"></canvas></div></div>
+      </div>
+    </div>
+
+    <div id="sec-chr7" class="subsec">
+      <div class="metrics">
+        <div class="met"><div class="met-l">분석된 변이</div><div class="met-v" style="color:#185FA5">14개</div></div>
+        <div class="met"><div class="met-l">분석된 트랙</div><div class="met-v" style="color:#185FA5">4,047개</div></div>
+        <div class="met"><div class="met-l">폐 관련 트랙</div><div class="met-v" style="color:#0F6E56">137개</div></div>
+        <div class="met"><div class="met-l">최고 영향 변이</div><div class="met-v" style="font-size:13px;line-height:1.3;color:#A32D2D">76304129:G>T<br><span style="font-size:11px;color:#6b6966">179,818</span></div></div>
+      </div>
+      <div class="g2">
+        <div class="card">
+          <div class="ct">변이별 영향 트랙</div>
+          <select id="c7-sel" onchange="renderC7()"></select>
+          <div class="tabr"><button class="tab on" onclick="setC7mode('all',this)">전체</button><button class="tab" onclick="setC7mode('lung',this)">폐 관련만</button></div>
+          <div id="c7-tracks"></div>
+        </div>
+        <div class="card"><div class="ct">폐암 관련 트랙 상위 10개</div><div id="c7-lung"></div></div>
+        <div class="card full"><div class="ct">변이별 total impact — 클릭하면 왼쪽이 바뀝니다</div><div style="position:relative;height:180px"><canvas id="c7-bar" role="img" aria-label="chr7 변이 total impact"></canvas></div></div>
+      </div>
+    </div>
+
+    <div id="sec-drivers" class="subsec">
+      <div class="metrics">
+        <div class="met"><div class="met-l">분석된 유전자</div><div class="met-v" style="color:#185FA5">10개</div></div>
+        <div class="met"><div class="met-l">분석된 변이</div><div class="met-v" style="color:#185FA5">20개</div></div>
+        <div class="met"><div class="met-l">최고 영향 유전자</div><div class="met-v" style="color:#A32D2D;font-size:15px">TP53<br><span style="font-size:11px;color:#6b6966">156,457</span></div></div>
+        <div class="met"><div class="met-l">폐암 관련 트랙</div><div class="met-v" style="color:#0F6E56">137개</div></div>
+      </div>
+      <div class="g2">
+        <div class="card full"><div class="ct">유전자별 최대 영향도 — 클릭하면 아래 트랙이 바뀝니다</div><div style="position:relative;height:180px"><canvas id="dr-gene" role="img" aria-label="드라이버 유전자별 total impact"></canvas></div></div>
+        <div class="card">
+          <div class="ct">변이별 영향 트랙</div>
+          <select id="dr-sel" onchange="renderDr()"></select>
+          <div class="tabr"><button class="tab on" onclick="setDrmode('all',this)">전체</button><button class="tab" onclick="setDrmode('lung',this)">폐 관련만</button></div>
+          <div id="dr-tracks"></div>
+        </div>
+        <div class="card"><div class="ct">폐암 관련 트랙 상위 10개</div><div id="dr-lung"></div></div>
+      </div>
+    </div>
+
+    <div id="sec-pca" class="subsec">
+      <div class="metrics">
+        <div class="met"><div class="met-l">분석된 변이</div><div class="met-v" style="color:#185FA5">20개</div></div>
+        <div class="met"><div class="met-l">PC1 설명 분산</div><div class="met-v" style="color:#185FA5">23.0%</div></div>
+        <div class="met"><div class="met-l">PC2 설명 분산</div><div class="met-v" style="color:#185FA5">17.0%</div></div>
+        <div class="met"><div class="met-l">식별된 클러스터</div><div class="met-v">1개 + 노이즈</div></div>
+      </div>
+      <div class="g2">
+        <div class="card full"><div class="ct">PCA 산점도 — 점 위에 마우스를 올려보세요</div><div style="position:relative;height:320px"><canvas id="pca-scatter" role="img" aria-label="PCA DBSCAN 산점도"></canvas></div></div>
+        <div class="card">
+          <div class="ct">클러스터 0 — 저영향 그룹 (2개 변이)</div>
+          <div style="background:#f5f5f4;border-radius:8px;padding:10px 12px;border:0.5px solid #e0deda">
+            <div style="font-size:12px;font-weight:500;margin-bottom:4px">NF1, BRAF 변이</div>
+            <div style="font-size:11px;color:#6b6966;margin-bottom:6px">평균 영향도: 5,354 · T세포 관련 트랙 주도</div>
+            <div id="c0-tracks"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ct">노이즈 그룹 — 고영향 변이 (18개 변이)</div>
+          <div style="background:#f5f5f4;border-radius:8px;padding:10px 12px;border:0.5px solid #e0deda">
+            <div style="font-size:12px;font-weight:500;margin-bottom:4px">TP53, CDKN2A, MET, KEAP1 등</div>
+            <div style="font-size:11px;color:#6b6966;margin-bottom:6px">평균 영향도: 37,088 · 광범위한 epigenomic 영향</div>
+            <div id="cn-tracks"></div>
+          </div>
+        </div>
+        <div class="card full"><div class="ct">변이별 PCA 좌표 및 클러스터 정보</div><div id="pca-table"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="planB" class="page">
+  <div class="nav">
+    <span class="nav-logo" onclick="goTo('home')"><i class="ti ti-dna-2" aria-hidden="true"></i> Olivetol</span>
+    <span class="nav-back" onclick="goTo('home')"><i class="ti ti-arrow-left" aria-hidden="true"></i> 홈으로</span>
+  </div>
+  <div class="inner">
+    <div style="margin-bottom:16px">
+      <div style="font-size:11px;color:#9c9895;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Plan B — 신호 변화 분석</div>
+      <div style="font-size:18px;font-weight:500;margin-bottom:4px">에피게노믹 신호 변화 분석</div>
+      <div style="font-size:13px;color:#6b6966">ATAC-seq · H3K27ac · H3K4me3 bin별 신호 변화 — 주요 변이 비교</div>
+    </div>
+
+    <div class="section-tabs">
+      <button class="stab on" onclick="switchBsec('kras',this)">KRAS G12C vs Q61L</button>
+      <button class="stab" onclick="switchBsec('top5',this)">Top 5 Mutations</button>
+      <button class="stab" onclick="switchBsec('range',this)">영향 범위 분석</button>
+      <button class="stab" onclick="switchBsec('corr',this)">트랙 상관관계</button>
+    </div>
+
+    <!-- ─── KRAS 비교 탭 ─── -->
+    <div id="bsec-kras" class="subsec on">
+      <div class="metrics">
+        <div class="met"><div class="met-l">KRAS G12C 환자 수</div><div class="met-v" style="color:#185FA5">59명</div></div>
+        <div class="met"><div class="met-l">KRAS Q61L 환자 수</div><div class="met-v" style="color:#A32D2D">2명</div></div>
+        <div class="met"><div class="met-l">분석 구간</div><div class="met-v">393,216 bp</div></div>
+        <div class="met"><div class="met-l">bin 크기</div><div class="met-v">128 bp</div></div>
+      </div>
+      <div class="g2">
+        <div class="card full">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+            <div class="ct" style="margin-bottom:0">분석 트랙 선택</div>
+            <div class="tabr" style="margin-bottom:0">
+              <button class="tab on" onclick="setBtrack('atac',this)">ATAC-seq</button>
+              <button class="tab" onclick="setBtrack('h3k27',this)">H3K27ac</button>
+              <button class="tab" onclick="setBtrack('h3k4',this)">H3K4me3</button>
+            </div>
+          </div>
+          <div style="position:relative;height:220px"><canvas id="b-g12c" role="img" aria-label="KRAS G12C 신호 변화 그래프"></canvas></div>
+          <div style="position:relative;height:220px;margin-top:8px"><canvas id="b-q61l" role="img" aria-label="KRAS Q61L 신호 변화 그래프"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="ct">G12C 특성 요약</div>
+          <div class="insight-box" style="border-left-color:#185FA5">
+            <div class="insight-title">ATAC-seq — DNA 접근성 증가</div>
+            <div class="insight-sub">변이 중심 주변 여러 위치에서 +0.08 spike. DNA 문이 열려 전사인자 결합 증가</div>
+          </div>
+          <div class="insight-box" style="border-left-color:#378ADD">
+            <div class="insight-title">H3K27ac — 인핸서 강한 활성화</div>
+            <div class="insight-sub">변이 중심에서 +0.17 큰 spike. 특정 인핸서가 강하게 켜짐</div>
+          </div>
+          <div class="insight-box" style="border-left-color:#3B6D11">
+            <div class="insight-title">H3K4me3 — 프로모터 억제</div>
+            <div class="insight-sub">변이 중심에서 -0.12 급락. 정상 전사 시작점이 방해받음</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ct">Q61L 특성 요약</div>
+          <div class="insight-box" style="border-left-color:#A32D2D">
+            <div class="insight-title">ATAC-seq — DNA 접근성 감소</div>
+            <div class="insight-sub">변이 중심에서 -0.09 spike. G12C와 반대 방향! DNA 문이 닫힘</div>
+          </div>
+          <div class="insight-box" style="border-left-color:#993C1D">
+            <div class="insight-title">H3K27ac — 인핸서 억제</div>
+            <div class="insight-sub">변이 중심에서 -0.10 억제. G12C와 반대로 인핸서가 꺼짐</div>
+          </div>
+          <div class="insight-box" style="border-left-color:#A32D2D">
+            <div class="insight-title">H3K4me3 — 더 강한 프로모터 억제</div>
+            <div class="insight-sub">변이 중심에서 -0.17 급락. G12C보다 1.5배 강한 억제 → 발암성이 강한 이유!</div>
+          </div>
+        </div>
+        <div class="card full">
+          <div class="ct">G12C vs Q61L 핵심 비교</div>
+          <div style="overflow-x:auto">
+            <table style="width:100%;font-size:12px;border-collapse:collapse">
+              <tr style="border-bottom:0.5px solid #e0deda">
+                <th style="text-align:left;padding:8px 10px;color:#6b6966;font-weight:500">트랙</th>
+                <th style="text-align:center;padding:8px 10px;color:#185FA5;font-weight:500">G12C (59명)</th>
+                <th style="text-align:center;padding:8px 10px;color:#A32D2D;font-weight:500">Q61L (2명)</th>
+                <th style="text-align:left;padding:8px 10px;color:#6b6966;font-weight:500">해석</th>
+              </tr>
+              <tr style="border-bottom:0.5px solid #e0deda">
+                <td style="padding:8px 10px;font-weight:500">ATAC-seq</td>
+                <td style="padding:8px 10px;text-align:center;color:#185FA5">+0.08 spike</td>
+                <td style="padding:8px 10px;text-align:center;color:#A32D2D">-0.09 spike</td>
+                <td style="padding:8px 10px;color:#6b6966;font-size:11px">방향이 반대 — G12C는 열고 Q61L은 닫음</td>
+              </tr>
+              <tr style="border-bottom:0.5px solid #e0deda">
+                <td style="padding:8px 10px;font-weight:500">H3K27ac</td>
+                <td style="padding:8px 10px;text-align:center;color:#185FA5">+0.17 활성화</td>
+                <td style="padding:8px 10px;text-align:center;color:#A32D2D">-0.10 억제</td>
+                <td style="padding:8px 10px;color:#6b6966;font-size:11px">인핸서 방향도 반대 — 서로 다른 발암 메커니즘</td>
+              </tr>
+              <tr>
+                <td style="padding:8px 10px;font-weight:500">H3K4me3</td>
+                <td style="padding:8px 10px;text-align:center;color:#185FA5">-0.12 억제</td>
+                <td style="padding:8px 10px;text-align:center;color:#A32D2D">-0.17 강한 억제</td>
+                <td style="padding:8px 10px;color:#6b6966;font-size:11px">Q61L이 1.5배 강함 → 발암성이 더 강한 이유!</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── Top 5 Mutations 탭 ─── -->
+    <div id="bsec-top5" class="subsec">
+      <div class="metrics">
+        <div class="met"><div class="met-l">분석 변이 수</div><div class="met-v" style="color:#185FA5">13개</div></div>
+        <div class="met"><div class="met-l">최대 영향 변이</div><div class="met-v" style="color:#A32D2D;font-size:14px">MSH2_R389*</div></div>
+        <div class="met"><div class="met-l">평균 영향 범위</div><div class="met-v">4.19 kb</div></div>
+        <div class="met"><div class="met-l">중립적 변이</div><div class="met-v">3개</div></div>
+      </div>
+      <div class="g2">
+        <div class="card full">
+          <div class="ct">변이 유형 분류 — 에피게노믹 메커니즘</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px">
+            <div style="background:#f5f5f4;border-radius:8px;padding:12px;border-left:3px solid #185FA5">
+              <div style="font-size:11px;font-weight:500;color:#185FA5;margin-bottom:4px">🔵 ATAC 주도형</div>
+              <div style="font-size:12px;font-weight:500;margin-bottom:4px">KRAS_Q61L · EPHA3_I410S</div>
+              <div style="font-size:11px;color:#6b6966;line-height:1.5">변이 위치에서만 sharp spike · 염색질 개방도만 증가 · 조절 요소는 변화 없음</div>
+            </div>
+            <div style="background:#f5f5f4;border-radius:8px;padding:12px;border-left:3px solid #A32D2D">
+              <div style="font-size:11px;font-weight:500;color:#A32D2D;margin-bottom:4px">🔴 H3K27ac/H3K4me3 주도형</div>
+              <div style="font-size:12px;font-weight:500;margin-bottom:4px">TP53_C277F · MSH2_R389*</div>
+              <div style="font-size:11px;color:#6b6966;line-height:1.5">넓은 영역에 걸쳐 증가 · 인핸서/프로모터 활성화 · 조절 네트워크 재구성</div>
+            </div>
+            <div style="background:#f5f5f4;border-radius:8px;padding:12px;border-left:3px solid #c8c5c0">
+              <div style="font-size:11px;font-weight:500;color:#6b6966;margin-bottom:4px">⚪ 중립형 (Passenger)</div>
+              <div style="font-size:12px;font-weight:500;margin-bottom:4px">EPHA3_T406S · NOTCH3 · MGA</div>
+              <div style="font-size:11px;color:#6b6966;line-height:1.5">모든 track 변화 없음 · Passenger Mutation 가능성 · 임상적 중요도 낮음</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card full">
+          <div class="ct">변이별 최대 에피게노믹 변화량 (Total Impact)</div>
+          <div style="position:relative;height:260px"><canvas id="top5-bar" role="img" aria-label="변이별 에피게노믹 영향 비교 차트"></canvas></div>
+        </div>
+
+        <div class="card">
+          <div class="ct">최대 영향 변이 Top 5</div>
+          <div id="top5-list"></div>
+          <div style="margin-top:10px;padding:8px 10px;background:#f5f5f4;border-radius:8px">
+            <div style="font-size:11px;color:#6b6966;line-height:1.6">
+              <strong>MSH2_R389*</strong> — DNA repair 유전자 변이로 광범위한 염색질 재구성<br>
+              <strong>TP53_C277F</strong> — 종양억제 유전자 변이로 조절 요소 활성화<br>
+              <strong>PTPRS_V1621L</strong> — H3K27ac(H3K4me3 주도의 조절 변화
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="ct">트랙별 평균 에피게노믹 변화</div>
+          <div style="position:relative;height:180px"><canvas id="top5-track" role="img" aria-label="트랙별 평균 에피게노믹 변화"></canvas></div>
+          <div style="margin-top:8px">
+            <div class="insight-box" style="border-left-color:#e74c3c;margin-bottom:6px">
+              <div class="insight-title">ATAC-seq — 가장 민감</div>
+              <div class="insight-sub">MSH2에서 최대 변화 (max 0.1512). 평균 0.0311±0.0443</div>
+            </div>
+            <div class="insight-box" style="border-left-color:#3498db;margin-bottom:6px">
+              <div class="insight-title">H3K27ac — TP53에서 강한 반응</div>
+              <div class="insight-sub">평균 0.0213±0.0368. 인핸서 활성화 반영</div>
+            </div>
+            <div class="insight-box" style="border-left-color:#2ecc71">
+              <div class="insight-title">H3K4me3 — MSH2·TP53에서 모두 증가</div>
+              <div class="insight-sub">평균 0.0296±0.0316. 프로모터 광범위 재구성</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── 영향 범위 분석 탭 ─── -->
+    <div id="bsec-range" class="subsec">
+      <div class="metrics">
+        <div class="met"><div class="met-l">평균 영향 범위</div><div class="met-v" style="color:#185FA5">4.19 kb</div></div>
+        <div class="met"><div class="met-l">최대 범위 변이</div><div class="met-v" style="color:#A32D2D;font-size:13px">TP53_C277F<br><span style="font-size:10px;color:#6b6966">17.28 kb</span></div></div>
+        <div class="met"><div class="met-l">Threshold</div><div class="met-v">0.01</div></div>
+        <div class="met"><div class="met-l">bin 크기</div><div class="met-v">128 bp</div></div>
+      </div>
+      <div class="g2">
+        <div class="card full">
+          <div class="ct">변이별 영향 범위 (Affected Bins · threshold=0.01)</div>
+          <div style="position:relative;height:300px"><canvas id="range-bar" role="img" aria-label="변이별 영향 범위 차트"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="ct">변이 분류 — 영향 범위 기준</div>
+          <div class="insight-box" style="border-left-color:#A32D2D">
+            <div class="insight-title">1. 광범위: TP53, MSH2</div>
+            <div class="insight-sub">종양억제/DNA repair 유전자 · 염색질 전체 재구성 · 폐암 발생의 핵심 드라이버</div>
+          </div>
+          <div class="insight-box" style="border-left-color:#185FA5">
+            <div class="insight-title">2. 국소적: KRAS, PRDM1</div>
+            <div class="insight-sub">Oncogene/조절 유전자 · 특정 영역만 변화 · 표적 치료 가능성</div>
+          </div>
+          <div class="insight-box" style="border-left-color:#c8c5c0">
+            <div class="insight-title">3. 중립적: MGA, EPHA3</div>
+            <div class="insight-sub">Passenger Mutation · Epigenomic 영향 없음 · 임상적 중요도 낮음</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ct">TP53_C277F 상세 — 가장 광범위한 영향</div>
+          <div style="background:#f5f5f4;border-radius:8px;padding:12px;margin-bottom:10px">
+            <div style="font-size:12px;font-weight:500;margin-bottom:8px">영향 범위 분포</div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+              <span style="font-size:11px;color:#6b6966">ATAC-seq</span>
+              <span style="font-size:12px;font-weight:500;color:#e74c3c">33 bins (4.2 kb)</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+              <span style="font-size:11px;color:#6b6966">H3K27ac</span>
+              <span style="font-size:12px;font-weight:500;color:#3498db">29 bins (3.7 kb)</span>
+            </div>
+            <div style="display:flex;justify-content:space-between">
+              <span style="font-size:11px;color:#6b6966">H3K4me3</span>
+              <span style="font-size:12px;font-weight:500;color:#2ecc71">73 bins (9.3 kb)</span>
+            </div>
+          </div>
+          <div style="font-size:11px;color:#6b6966;line-height:1.6;padding:8px 10px;background:#f5f5f4;border-radius:8px">
+            <strong>생물학적 의미:</strong> TP53 변이 → 주변 프로모터 광범위 활성화. H3K4me3(프로모터 마커)가 가장 넓게 영향 받음 (±8.6kb). 보상 기전 또는 염색질 불안정성 시사
+          </div>
+        </div>
+
+        <!-- Threshold Sensitivity -->
+        <div class="card full">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+            <div class="ct" style="margin-bottom:0">Threshold Sensitivity — threshold 값에 따른 영향 범위 변화</div>
+            <div style="display:flex;gap:6px">
+              <span style="font-size:10px;padding:3px 8px;border-radius:12px;background:#E6F1FB;color:#185FA5;font-weight:500">0.01 선택 이유</span>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+            <div>
+              <div style="font-size:10px;font-weight:500;color:#e74c3c;margin-bottom:6px;text-align:center">ATAC-seq</div>
+              <div style="position:relative;height:180px"><canvas id="thresh-atac" role="img" aria-label="ATAC threshold sensitivity"></canvas></div>
+            </div>
+            <div>
+              <div style="font-size:10px;font-weight:500;color:#3498db;margin-bottom:6px;text-align:center">H3K27ac</div>
+              <div style="position:relative;height:180px"><canvas id="thresh-h3k27" role="img" aria-label="H3K27ac threshold sensitivity"></canvas></div>
+            </div>
+            <div>
+              <div style="font-size:10px;font-weight:500;color:#2ecc71;margin-bottom:6px;text-align:center">H3K4me3</div>
+              <div style="position:relative;height:180px"><canvas id="thresh-h3k4" role="img" aria-label="H3K4me3 threshold sensitivity"></canvas></div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:12px">
+            <div style="padding:8px 10px;background:#f5f5f4;border-radius:8px;border-left:3px solid #378ADD">
+              <div style="font-size:11px;font-weight:500;margin-bottom:3px">낮을수록 (0.005)</div>
+              <div style="font-size:11px;color:#6b6966">더 많은 bins 포함 → 노이즈도 포함 가능</div>
+            </div>
+            <div style="padding:8px 10px;background:#E6F1FB;border-radius:8px;border-left:3px solid #185FA5">
+              <div style="font-size:11px;font-weight:500;margin-bottom:3px;color:#185FA5">✓ 최적값: 0.01</div>
+              <div style="font-size:11px;color:#6b6966">MSH2, TP53 등 주요 변이 잘 포착 · 신호 대비 충분히 큰 값</div>
+            </div>
+            <div style="padding:8px 10px;background:#f5f5f4;border-radius:8px;border-left:3px solid #A32D2D">
+              <div style="font-size:11px;font-weight:500;margin-bottom:3px">높을수록 (0.05)</div>
+              <div style="font-size:11px;color:#6b6966">진짜 강한 변화만 → 과소평가 가능</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Range vs Magnitude -->
+        <div class="card full">
+          <div class="ct">Range vs. Magnitude — 영향 범위 ↔ 최대 변화량 상관관계</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px">
+            <div>
+              <div style="font-size:10px;font-weight:500;color:#e74c3c;margin-bottom:6px;text-align:center">ATAC-seq · Corr=0.686</div>
+              <div style="position:relative;height:180px"><canvas id="rvm-atac" role="img" aria-label="ATAC range vs magnitude"></canvas></div>
+            </div>
+            <div>
+              <div style="font-size:10px;font-weight:500;color:#3498db;margin-bottom:6px;text-align:center">H3K27ac · Corr=0.624</div>
+              <div style="position:relative;height:180px"><canvas id="rvm-h3k27" role="img" aria-label="H3K27ac range vs magnitude"></canvas></div>
+            </div>
+            <div>
+              <div style="font-size:10px;font-weight:500;color:#2ecc71;margin-bottom:6px;text-align:center">H3K4me3 · Corr=0.790</div>
+              <div style="position:relative;height:180px"><canvas id="rvm-h3k4" role="img" aria-label="H3K4me3 range vs magnitude"></canvas></div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div style="padding:10px 12px;background:#f5f5f4;border-radius:8px">
+              <div style="font-size:11px;font-weight:500;margin-bottom:6px">📐 Range (영향 범위)</div>
+              <div style="font-size:11px;color:#6b6966;line-height:1.6">영향 받은 bins 개수<br>Ex) 50 bins = 6.4 kb<br><strong>→ 얼마나 넓은 영역이 변했는가</strong></div>
+            </div>
+            <div style="padding:10px 12px;background:#f5f5f4;border-radius:8px">
+              <div style="font-size:11px;font-weight:500;margin-bottom:6px">📊 Magnitude (최대 변화량)</div>
+              <div style="font-size:11px;color:#6b6966;line-height:1.6">최대 변화량의 절댓값<br>Ex) max = 0.05<br><strong>→ 얼마나 강하게 변했는가</strong></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ─── 트랙 상관관계 탭 ─── -->
+    <div id="bsec-corr" class="subsec">
+      <div class="metrics">
+        <div class="met"><div class="met-l">ATAC↔H3K27ac</div><div class="met-v" style="color:#185FA5">r=0.890</div></div>
+        <div class="met"><div class="met-l">ATAC↔H3K4me3</div><div class="met-v" style="color:#3B6D11">r=0.728</div></div>
+        <div class="met"><div class="met-l">H3K27ac↔H3K4me3</div><div class="met-v" style="color:#854F0B">r=0.581</div></div>
+        <div class="met"><div class="met-l">분석 변이 수</div><div class="met-v">13개</div></div>
+      </div>
+      <div class="g2">
+        <div class="card full">
+          <div class="ct">트랙 간 상관관계 히트맵</div>
+          <div style="position:relative;height:220px"><canvas id="corr-chart" role="img" aria-label="트랙 상관관계 히트맵"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="ct">생물학적 해석</div>
+          <div class="insight-box" style="border-left-color:#185FA5">
+            <div class="insight-title">ATAC-seq 예측 정확성</div>
+            <div class="insight-sub">ATAC 증가 → H3K27ac/H3K4me3도 증가 (r>0.7). Chromatin open이 모든 조절 요소의 전제 조건</div>
+          </div>
+          <div class="insight-box" style="border-left-color:#3B6D11">
+            <div class="insight-title">양의 상관관계</div>
+            <div class="insight-sub">변이로 인한 변화가 일관된 방향. 증가하면 모두 증가, 감소하면 모두 감소 → 전체적 염색질 상태 변화 반영</div>
+          </div>
+          <div class="insight-box" style="border-left-color:#854F0B">
+            <div class="insight-title">변이별 메커니즘 다양성</div>
+            <div class="insight-sub">KRAS: ATAC 주도 · TP53: H3K27ac, H3K4me3 주도. 변이 타입에 따라 메커니즘 다름</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ct">핵심 결론</div>
+          <div style="padding:12px;background:#f5f5f4;border-radius:8px;border-left:3px solid #185FA5">
+            <div style="font-size:12px;line-height:1.7;color:#6b6966">
+              ✅ 변이 영향 평가 시 ATAC-seq만으로도 어느 정도 예측 가능<br>
+              ✅ 조절 요소의 정확한 변화는 H3K27ac, H3K4me3 필요<br>
+              <strong style="color:#1a1917">⟹ 3개 track을 함께 보면 변이의 전체 epigenomic 영향 파악 가능!</strong>
+            </div>
+          </div>
+          <div style="margin-top:10px">
+            <div style="font-size:11px;font-weight:500;margin-bottom:6px;color:#6b6966">유의성 검정 (p-value)</div>
+            <div class="trow"><span class="tnm">ATAC vs H3K27ac</span><span class="tv pos">r=0.890 ***</span></div>
+            <div class="trow"><span class="tnm">ATAC vs H3K4me3</span><span class="tv pos">r=0.728 **</span></div>
+            <div class="trow"><span class="tnm">H3K27ac vs H3K4me3</span><span class="tv pos">r=0.581 *</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="planC" class="page">
+  <div class="nav">
+    <span class="nav-logo" onclick="goTo('home')"><i class="ti ti-dna-2" aria-hidden="true"></i> Olivetol</span>
+    <span class="nav-back" onclick="goTo('home')"><i class="ti ti-arrow-left" aria-hidden="true"></i> 홈으로</span>
+  </div>
+  <div class="inner">
+    <div style="margin-bottom:16px">
+      <div style="font-size:11px;color:#9c9895;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Plan C — 환자 맞춤형 분석</div>
+      <div style="font-size:18px;font-weight:500;margin-bottom:4px">생존 예측 & 위험군 층화</div>
+      <div style="font-size:13px;color:#6b6966">Enformer risk score × 임상 정보 통합 · Cox PH 모델 · 개인별 다차원 위험 레이더</div>
+    </div>
+
+    <div class="section-tabs">
+      <button class="stab on" onclick="switchCsec('km',this)">Kaplan-Meier 생존 곡선</button>
+      <button class="stab" onclick="switchCsec('surv',this)">개인별 생존 확률</button>
+      <button class="stab" onclick="switchCsec('radar',this)">위험 레이더 차트</button>
+    </div>
+
+    <!-- ─── Kaplan-Meier 탭 ─── -->
+    <div id="csec-km" class="subsec on">
+      <div class="metrics">
+        <div class="met"><div class="met-l">분석 환자 수</div><div class="met-v" style="color:#185FA5">1,278명</div></div>
+        <div class="met"><div class="met-l">High Risk 군</div><div class="met-v" style="color:#A32D2D">635명</div></div>
+        <div class="met"><div class="met-l">Low Risk 군</div><div class="met-v" style="color:#185FA5">643명</div></div>
+        <div class="met"><div class="met-l">Enformer HR</div><div class="met-v" style="color:#854F0B;font-size:16px">1.848<br><span style="font-size:10px;color:#6b6966">p &lt; 0.001 ***</span></div></div>
+      </div>
+      <div class="g2">
+        <div class="card full">
+          <div class="ct">Kaplan-Meier 생존 곡선 — Enformer Risk Score 기준 High / Low Risk</div>
+          <div style="position:relative;height:320px"><canvas id="km-chart" role="img" aria-label="Kaplan-Meier 생존 곡선"></canvas></div>
+          <div style="margin-top:10px;display:flex;gap:16px;flex-wrap:wrap">
+            <div style="display:flex;align-items:center;gap:6px"><div style="width:20px;height:3px;background:#185FA5;border-radius:2px"></div><span style="font-size:11px;color:#6b6966">Low Risk (Enformer 점수 하위 50%)</span></div>
+            <div style="display:flex;align-items:center;gap:6px"><div style="width:20px;height:3px;background:#A32D2D;border-radius:2px"></div><span style="font-size:11px;color:#6b6966">High Risk (Enformer 점수 상위 50%)</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ct">핵심 해석</div>
+          <div class="insight-box" style="border-left-color:#A32D2D">
+            <div class="insight-title">High Risk군 — 유의미하게 낮은 생존율</div>
+            <div class="insight-sub">Enformer Risk Score 상위 50%(n=635)의 5년 생존율 21.5% — Low Risk군(45.0%)의 절반 이하. Enformer가 실제 예후 분류에 유효함을 확인</div>
+          </div>
+          <div class="insight-box" style="border-left-color:#185FA5">
+            <div class="insight-title">Enformer HR = 1.848 (p&lt;0.001 ***)</div>
+            <div class="insight-sub">Cox PH 모델에서 Enformer Risk Score가 병기(HR=1.426)보다 높은 위험 기여도를 보임 → 유전체 기능 정보가 독립적 예후 인자로 작동</div>
+          </div>
+          <div class="insight-box" style="border-left-color:#854F0B">
+            <div class="insight-title">1년 생존율 차이: 92.5% vs 83.7%</div>
+            <div class="insight-sub">단기 생존율도 8.8%p 차이. 시간이 지날수록 격차 확대 — 3년(69.9% vs 43.5%), 5년(45.0% vs 21.5%)으로 벌어짐</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ct">Cox 모델 — 위험 인자별 기여도</div>
+          <div style="position:relative;height:180px"><canvas id="cox-chart" role="img" aria-label="Cox 모델 위험 인자 기여도"></canvas></div>
+          <div style="margin-top:10px;padding:8px 10px;background:#f5f5f4;border-radius:8px">
+            <div style="font-size:11px;color:#6b6966;line-height:1.6">
+              Hazard Ratio(HR) > 1 이면 위험 증가 요인.<br>
+              <strong>Enformer score</strong>가 HR &gt; 1로 독립적 위험 인자로 확인 → 유전체 기능 정보가 임상 예후 예측에 기여함을 시사
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── 개인별 생존 확률 탭 ─── -->
+    <div id="csec-surv" class="subsec">
+      <div class="metrics">
+        <div class="met"><div class="met-l">Low Risk 1년 생존율</div><div class="met-v" style="color:#185FA5">92.5%</div></div>
+        <div class="met"><div class="met-l">Low Risk 3년 생존율</div><div class="met-v" style="color:#185FA5">69.9%</div></div>
+        <div class="met"><div class="met-l">High Risk 1년 생존율</div><div class="met-v" style="color:#A32D2D">83.7%</div></div>
+        <div class="met"><div class="met-l">High Risk 5년 생존율</div><div class="met-v" style="color:#A32D2D">21.5%</div></div>
+      </div>
+      <div class="g2">
+        <div class="card full">
+          <div class="ct">개인별 1년 · 3년 · 5년 생존 확률 분포</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+            <div>
+              <div style="font-size:10px;font-weight:500;color:#185FA5;margin-bottom:6px;text-align:center">1년 생존 확률</div>
+              <div style="position:relative;height:180px"><canvas id="surv1-chart" role="img" aria-label="1년 생존 확률 분포"></canvas></div>
+            </div>
+            <div>
+              <div style="font-size:10px;font-weight:500;color:#854F0B;margin-bottom:6px;text-align:center">3년 생존 확률</div>
+              <div style="position:relative;height:180px"><canvas id="surv3-chart" role="img" aria-label="3년 생존 확률 분포"></canvas></div>
+            </div>
+            <div>
+              <div style="font-size:10px;font-weight:500;color:#A32D2D;margin-bottom:6px;text-align:center">5년 생존 확률</div>
+              <div style="position:relative;height:180px"><canvas id="surv5-chart" role="img" aria-label="5년 생존 확률 분포"></canvas></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ct">해석</div>
+          <div class="insight-box" style="border-left-color:#185FA5">
+            <div class="insight-title">1년 생존율 — Low 92.5% vs High 83.7%</div>
+            <div class="insight-sub">단기에도 8.8%p 차이. 대부분 환자가 0.80~0.95 구간에 분포하나 High Risk군은 하위 구간으로 이동</div>
+          </div>
+          <div class="insight-box" style="border-left-color:#854F0B">
+            <div class="insight-title">3년 생존율 — Low 69.9% vs High 43.5%</div>
+            <div class="insight-sub">26.4%p 차이로 격차 확대. 환자 간 이질성이 시간이 지나면서 뚜렷해짐</div>
+          </div>
+          <div class="insight-box" style="border-left-color:#A32D2D">
+            <div class="insight-title">5년 생존율 — Low 45.0% vs High 21.5%</div>
+            <div class="insight-sub">High Risk군은 Low Risk군의 절반 이하. Enformer Risk Score가 장기 예후 예측의 핵심 인자임을 확인</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ct">환자 예시 — High vs Low Risk 비교</div>
+          <div style="overflow-x:auto">
+            <table style="width:100%;font-size:11px;border-collapse:collapse">
+              <tr style="border-bottom:0.5px solid #e0deda">
+                <th style="text-align:left;padding:6px 8px;color:#6b6966;font-weight:500">구분</th>
+                <th style="text-align:center;padding:6px 8px;color:#A32D2D;font-weight:500">High Risk 예시</th>
+                <th style="text-align:center;padding:6px 8px;color:#185FA5;font-weight:500">Low Risk 예시</th>
+              </tr>
+              <tr style="border-bottom:0.5px solid #e0deda">
+                <td style="padding:6px 8px;color:#6b6966">나이</td>
+                <td style="padding:6px 8px;text-align:center">71세</td>
+                <td style="padding:6px 8px;text-align:center">54세</td>
+              </tr>
+              <tr style="border-bottom:0.5px solid #e0deda">
+                <td style="padding:6px 8px;color:#6b6966">병기</td>
+                <td style="padding:6px 8px;text-align:center;color:#A32D2D">Stage III</td>
+                <td style="padding:6px 8px;text-align:center;color:#185FA5">Stage I</td>
+              </tr>
+              <tr style="border-bottom:0.5px solid #e0deda">
+                <td style="padding:6px 8px;color:#6b6966">Enformer 점수</td>
+                <td style="padding:6px 8px;text-align:center;color:#A32D2D">8.4</td>
+                <td style="padding:6px 8px;text-align:center;color:#185FA5">2.1</td>
+              </tr>
+              <tr style="border-bottom:0.5px solid #e0deda">
+                <td style="padding:6px 8px;color:#6b6966">TP53 변이</td>
+                <td style="padding:6px 8px;text-align:center;color:#A32D2D">있음</td>
+                <td style="padding:6px 8px;text-align:center;color:#185FA5">없음</td>
+              </tr>
+              <tr style="border-bottom:0.5px solid #e0deda">
+                <td style="padding:6px 8px;color:#6b6966">1년 생존율</td>
+                <td style="padding:6px 8px;text-align:center;color:#A32D2D">83.7%</td>
+                <td style="padding:6px 8px;text-align:center;color:#185FA5">92.5%</td>
+              </tr>
+              <tr style="border-bottom:0.5px solid #e0deda">
+                <td style="padding:6px 8px;color:#6b6966">3년 생존율</td>
+                <td style="padding:6px 8px;text-align:center;color:#A32D2D">43.5%</td>
+                <td style="padding:6px 8px;text-align:center;color:#185FA5">69.9%</td>
+              </tr>
+              <tr>
+                <td style="padding:6px 8px;color:#6b6966">5년 생존율</td>
+                <td style="padding:6px 8px;text-align:center;color:#A32D2D">21.5%</td>
+                <td style="padding:6px 8px;text-align:center;color:#185FA5">45.0%</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── 위험 레이더 탭 ─── -->
+    <div id="csec-radar" class="subsec">
+      <div class="metrics">
+        <div class="met"><div class="met-l">분석 축</div><div class="met-v" style="color:#185FA5">6개</div></div>
+        <div class="met"><div class="met-l">임상 정보</div><div class="met-v" style="font-size:13px">나이·병기<br><span style="font-size:10px;color:#6b6966">·흡연력</span></div></div>
+        <div class="met"><div class="met-l">유전 정보</div><div class="met-v" style="font-size:13px">Enformer<br><span style="font-size:10px;color:#6b6966">·TP53 변이</span></div></div>
+        <div class="met"><div class="met-l">직관성</div><div class="met-v" style="font-size:13px">면적 넓을수록<br><span style="font-size:10px;color:#6b6966">위험 높음</span></div></div>
+      </div>
+      <div class="g2">
+        <div class="card">
+          <div class="ct">환자 선택 — 위험 레이더 보기</div>
+          <select id="radar-sel" onchange="updateRadar()" style="margin-bottom:12px">
+            <option value="0">TCGA-86-8074 (High Risk · Stage III)</option>
+            <option value="1">TCGA-55-6543 (Low Risk · Stage I)</option>
+            <option value="2">TCGA-44-2662 (중간 위험 · Stage II)</option>
+            <option value="3">TCGA-64-5781 (High Risk · Stage II · TP53 변이)</option>
+            <option value="4">TCGA-78-7154 (Low Risk · Stage I · 비흡연)</option>
+          </select>
+          <div style="position:relative;height:300px"><canvas id="radar-chart" role="img" aria-label="위험 레이더 차트"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="ct">6개 축 설명</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;align-items:flex-start;gap:10px;padding:8px 10px;background:#f5f5f4;border-radius:8px">
+              <span style="font-size:16px">🧬</span>
+              <div><div style="font-size:12px;font-weight:500;margin-bottom:2px">Enformer Score</div><div style="font-size:11px;color:#6b6966">변이의 epigenomic 기능적 영향 크기. 이 프로젝트의 핵심 지표</div></div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:10px;padding:8px 10px;background:#f5f5f4;border-radius:8px">
+              <span style="font-size:16px">🔴</span>
+              <div><div style="font-size:12px;font-weight:500;margin-bottom:2px">TP53 변이</div><div style="font-size:11px;color:#6b6966">Plan A·B에서 가장 광범위한 epigenomic 영향 확인. 있으면 고위험</div></div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:10px;padding:8px 10px;background:#f5f5f4;border-radius:8px">
+              <span style="font-size:16px">🚬</span>
+              <div><div style="font-size:12px;font-weight:500;margin-bottom:2px">흡연력 (Pack-years)</div><div style="font-size:11px;color:#6b6966">LUAD의 주요 환경 위험 인자. 누적 흡연량이 많을수록 고위험</div></div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:10px;padding:8px 10px;background:#f5f5f4;border-radius:8px">
+              <span style="font-size:16px">📅</span>
+              <div><div style="font-size:12px;font-weight:500;margin-bottom:2px">나이 (Age)</div><div style="font-size:11px;color:#6b6966">고령일수록 예후 불량. 코호트 평균(63세) 대비 정규화</div></div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:10px;padding:8px 10px;background:#f5f5f4;border-radius:8px">
+              <span style="font-size:16px">🏥</span>
+              <div><div style="font-size:12px;font-weight:500;margin-bottom:2px">병기 (Stage)</div><div style="font-size:11px;color:#6b6966">Stage I~IV. 병기가 높을수록 예후 불량 및 치료 선택지 제한</div></div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:10px;padding:8px 10px;background:#f5f5f4;border-radius:8px">
+              <span style="font-size:16px">⚧</span>
+              <div><div style="font-size:12px;font-weight:500;margin-bottom:2px">성별 위험도</div><div style="font-size:11px;color:#6b6966">LUAD 코호트 내 성별에 따른 상대적 위험도 반영</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="card full">
+          <div class="ct">선택 환자 상세 정보</div>
+          <div id="radar-detail" style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px"></div>
+          <div style="margin-top:12px;padding:10px 12px;background:#f5f5f4;border-radius:8px;border-left:3px solid #854F0B">
+            <div style="font-size:11px;color:#6b6966;line-height:1.7" id="radar-insight">환자를 선택하면 해석이 표시됩니다.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const geneColors={TP53:'#A32D2D',CDKN2A:'#854F0B',MET:'#185FA5',KEAP1:'#0F6E56',EGFR:'#534AB7',RB1:'#993C1D',STK11:'#3B6D11',KRAS:'#378ADD',NF1:'#5F5E5A',BRAF:'#888780'};
+const drivers=['KRAS','TP53','EGFR','STK11','KEAP1','NF1','BRAF','MET','RB1','CDKN2A','SMARCA4'];
+
+function goTo(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);if(id==='planA')initPlanA();if(id==='planB')initPlanB();if(id==='planC')initPlanC();}
+function switchSec(id,el){document.querySelectorAll('#planA .stab').forEach(t=>t.classList.remove('on'));el.classList.add('on');document.querySelectorAll('#planA .subsec').forEach(s=>s.classList.remove('on'));document.getElementById('sec-'+id).classList.add('on');initSec(id);}
+let inited={};
+function initSec(id){if(inited[id])return;inited[id]=true;if(id==='patients')initPatients();else if(id==='chr7')initChr7();else if(id==='drivers')initDrivers();else if(id==='pca')initPCA();}
+
+const D_PT={top_genes:[{gene:"TTN",count:896},{gene:"MUC16",count:556},{gene:"CSMD3",count:486},{gene:"RYR2",count:474},{gene:"LRP1B",count:392},{gene:"USH2A",count:374},{gene:"TP53",count:332},{gene:"ZFHX4",count:317},{gene:"FLG",count:259},{gene:"XIRP2",count:255},{gene:"FAT3",count:226},{gene:"SPTA1",count:212},{gene:"MUC17",count:193},{gene:"ANK2",count:192},{gene:"PCDH15",count:191},{gene:"ZNF536",count:190},{gene:"CSMD1",count:187},{gene:"PAPPA2",count:176},{gene:"APOB",count:175},{gene:"RYR3",count:172}],driver_counts:[{gene:"TP53",count:332},{gene:"KRAS",count:163},{gene:"EGFR",count:110},{gene:"KEAP1",count:102},{gene:"NF1",count:78},{gene:"STK11",count:71},{gene:"SMARCA4",count:57},{gene:"BRAF",count:55},{gene:"CDKN2A",count:44},{gene:"RB1",count:39},{gene:"MET",count:27}],var_class:[{name:"Missense_Mutation",count:126254},{name:"Silent",count:42349},{name:"Nonsense_Mutation",count:10454},{name:"Frame_Shift_Del",count:4256},{name:"Splice_Site",count:3719},{name:"Intron",count:1730},{name:"RNA",count:1459},{name:"Frame_Shift_Ins",count:1290},{name:"Splice_Region",count:1110},{name:"In_Frame_Del",count:406}],var_type:[{name:"SNP",count:188298},{name:"DEL",count:4998},{name:"INS",count:1423}],chrom_counts:[{chrom:"chr1",count:22594},{chrom:"chr2",count:15363},{chrom:"chr11",count:13252},{chrom:"chr7",count:10985},{chrom:"chr19",count:10942},{chrom:"chr5",count:10802},{chrom:"chrX",count:10406},{chrom:"chr12",count:9579},{chrom:"chr3",count:9556},{chrom:"chr6",count:9070},{chrom:"chr17",count:8491},{chrom:"chr4",count:8368},{chrom:"chr8",count:8067},{chrom:"chr10",count:7325},{chrom:"chr14",count:6253},{chrom:"chr9",count:6202},{chrom:"chr16",count:6103},{chrom:"chr15",count:5063},{chrom:"chr20",count:4926},{chrom:"chr13",count:3467},{chrom:"chr18",count:3233},{chrom:"chr22",count:2621},{chrom:"chr21",count:1984},{chrom:"chrY",count:77}]};
+const D_C7={variants:[{id:"chr7:4113432:G>T",total_impact:11045.5,top_tracks:[{track:"CHIP:H3K36me3:spinal cord fema",delta:-69.687},{track:"CHIP:H3K36me3:stomach female e",delta:-55.913},{track:"CHIP:H3K36me3:neuron originate",delta:-47.398},{track:"CHIP:H3K36me3:HepG2",delta:-47.38},{track:"CHIP:H3K36me3:HEK293",delta:-46.836},{track:"CHIP:RBM22:HepG2",delta:-44.347},{track:"CHIP:H3K36me3:mesodermal cell ",delta:-42.671},{track:"CHIP:H3K27me3:MM.1S",delta:40.681},{track:"CHIP:H3K36me3:large intestine ",delta:-38.331},{track:"CHIP:H3K36me3:myoepithelial ce",delta:-37.618}],lung_tracks:[{track:"CHIP:H3K36me3:lung female adul",delta:-30.873},{track:"CHIP:H3K36me3:bronchial epithe",delta:-17.907},{track:"CHIP:H3K36me3:lung female embr",delta:-12.476},{track:"CHIP:H3K36me3:lung male child ",delta:-9.102},{track:"CHIP:H3K27me3:lung female embr",delta:8.584}]},{id:"chr7:31578232:A>G",total_impact:8694.3,top_tracks:[{track:"CHIP:H3K27me3:HCT116",delta:22.931},{track:"CHIP:EZH2:HCT116",delta:21.858},{track:"CHIP:EZH2phosphoT487:HCT116",delta:20.732},{track:"DNASE:adrenal gland embryo (96",delta:-14.544},{track:"CHIP:H3K27ac:large intestine m",delta:-13.363},{track:"DNASE:adrenal gland female emb",delta:-13.125},{track:"CHIP:H3K9me3:skeletal muscle s",delta:-12.928},{track:"CHIP:H3K27ac:small intestine m",delta:-12.024},{track:"CHIP:U2AF2:K562",delta:-10.241},{track:"CHIP:H3K9me3:IMR-90",delta:-9.78}],lung_tracks:[{track:"CHIP:H3K4me1:lung male child (",delta:-3.747},{track:"CHIP:H3K27me3:bronchial epithe",delta:3.564},{track:"CAGE:lung adenocarcinoma cell ",delta:3.149},{track:"CAGE:Alveolar Epithelial Cells",delta:3.111},{track:"CHIP:H3K27me3:lung female adul",delta:3.038}]},{id:"chr7:47967910:T>A",total_impact:18904.2,top_tracks:[{track:"CAGE:CD14+ monocytes - treated",delta:-80.516},{track:"CAGE:CD14+ monocytes - mock tr",delta:-75.09},{track:"CAGE:Macrophage - monocyte der",delta:-61.272},{track:"CAGE:Endothelial Cells - Arter",delta:-61.056},{track:"CAGE:Endothelial Cells - Umbil",delta:-59.792},{track:"CAGE:colon carcinoma cell line",delta:-57.631},{track:"CAGE:CD14+ monocyte derived en",delta:-56.68},{track:"CAGE:Keratinocyte - oral,",delta:-56.441},{track:"CAGE:squamous cell lung carcin",delta:-55.712},{track:"CAGE:Intestinal epithelial cel",delta:-53.336}],lung_tracks:[{track:"CAGE:squamous cell lung carcin",delta:-55.712},{track:"CAGE:bronchial squamous cell c",delta:-52.239},{track:"CAGE:lung adenocarcinoma, papi",delta:-45.494},{track:"CAGE:lung adenocarcinoma cell ",delta:-38.74},{track:"CAGE:alveolar cell carcinoma c",delta:-37.727}]},{id:"chr7:48272755:G>C",total_impact:3001.1,top_tracks:[{track:"CHIP:H3K36me3:neutrophil male",delta:-50.259},{track:"CHIP:H3K36me3:neutrophil",delta:-27.488},{track:"CHIP:H3K27ac:PC-3",delta:-14.584},{track:"CHIP:EZH2phosphoT487:PC-9",delta:-9.582},{track:"CHIP:H3K27me3:PC-9",delta:-9.191},{track:"DNASE:RPMI-7951",delta:-9.066},{track:"CHIP:EZH2:PC-9",delta:-8.998},{track:"CHIP:H3K27me3:HCT116",delta:-8.751},{track:"CHIP:EZH2:HCT116",delta:-8.346},{track:"CHIP:EZH2phosphoT487:HCT116",delta:-8.073}],lung_tracks:[{track:"DNASE:fibroblast of lung male ",delta:-5.141},{track:"CHIP:H3K27me3:A549 treated wit",delta:-3.156},{track:"CHIP:H2AFZ:fibroblast of lung ",delta:-3.073},{track:"CHIP:CTCF:fibroblast of pulmon",delta:-1.912},{track:"CAGE:lung, adult, pool1",delta:1.852}]},{id:"chr7:76304129:G>T",total_impact:179817.6,top_tracks:[{track:"CAGE:Fibroblast - Periodontal ",delta:1936.082},{track:"CAGE:Mesenchymal stem cells - ",delta:1745.629},{track:"CAGE:tongue, fetal,",delta:1743.779},{track:"CAGE:skeletal muscle, fetal,",delta:1473.074},{track:"CAGE:skeletal muscle, adult, p",delta:1323.276},{track:"CAGE:CD133+ stem cells - adult",delta:1232.393},{track:"CAGE:tongue, adult",delta:1175.402},{track:"CAGE:artery, adult",delta:1139.826},{track:"CAGE:liver, fetal, pool1",delta:1066.547},{track:"CAGE:squamous cell lung carcin",delta:1045.018}],lung_tracks:[{track:"CAGE:squamous cell lung carcin",delta:1045.018},{track:"CAGE:alveolar cell carcinoma c",delta:672.619},{track:"CAGE:non-small cell lung cance",delta:489.161},{track:"CAGE:bronchogenic carcinoma ce",delta:479.165},{track:"CAGE:Fibroblast - Lung,",delta:426.61}]},{id:"chr7:82965797:G>C",total_impact:10543.9,top_tracks:[{track:"CAGE:diencephalon, adult",delta:70.444},{track:"CHIP:H3K27ac:OCI-LY1",delta:69.106},{track:"CAGE:spinal cord - adult,",delta:56.758},{track:"CAGE:locus coeruleus - adult,",delta:53.303},{track:"CAGE:spinal cord, newborn,",delta:52.465},{track:"CAGE:spinal cord, fetal,",delta:49.903},{track:"CAGE:substantia nigra, adult,",delta:49.199},{track:"CAGE:thalamus - adult,",delta:49.051},{track:"CAGE:thalamus, newborn,",delta:47.72},{track:"CAGE:spinal cord, adult,",delta:47.665}],lung_tracks:[{track:"CAGE:non-small cell lung cance",delta:12.611},{track:"CHIP:H2AFZ:A549 treated with 0",delta:-8.537},{track:"CAGE:small cell lung carcinoma",delta:8.486},{track:"CHIP:FOXA1:A549 treated with 0",delta:-7.62},{track:"CHIP:H3K4me2:A549 treated with",delta:-7.184}]},{id:"chr7:101031682:C>A",total_impact:6812.6,top_tracks:[{track:"CAGE:small intestine, adult, p",delta:-685.481},{track:"CAGE:colon, adult, pool1",delta:-516.308},{track:"CAGE:small intestine, fetal,",delta:-469.306},{track:"CAGE:colon, fetal,",delta:-458.075},{track:"CAGE:colon, adult,",delta:-430.738},{track:"CAGE:duodenum, fetal, , tech_",delta:-249.504},{track:"CAGE:gall bladder, adult",delta:-192.407},{track:"CAGE:adenocarcinoma cell line:",delta:-121.094},{track:"CAGE:signet ring carcinoma cel",delta:-84.835},{track:"CAGE:appendix, adult",delta:-62.477}],lung_tracks:[{track:"CHIP:CTCF:A549 treated with 10",delta:-4.029},{track:"CHIP:H3K36me3:lung female adul",delta:-3.183},{track:"CHIP:CTCF:fibroblast of pulmon",delta:-2.648},{track:"CHIP:H3K27me3:lung female embr",delta:2.563},{track:"CHIP:H3K4me3:bronchial epithel",delta:2.349}]},{id:"chr7:113083679:C>A",total_impact:24129.8,top_tracks:[{track:"CHIP:H3K9ac:neural cell",delta:-210.543},{track:"CHIP:H3K4me3:neural cell",delta:-199.389},{track:"CHIP:H3K27ac:neural cell",delta:-197.719},{track:"CAGE:medial temporal gyrus, ne",delta:-171.234},{track:"CHIP:H3K4me3:brain female embr",delta:-170.759},{track:"CAGE:medial frontal gyrus, new",delta:-164.682},{track:"CAGE:brain, fetal, pool1",delta:-163.146},{track:"CAGE:occipital cortex, newborn",delta:-153.948},{track:"CAGE:parietal lobe, newborn,",delta:-146.012},{track:"CHIP:H3K4me3:germinal matrix m",delta:-141.017}],lung_tracks:[{track:"CHIP:H3K4me3:bronchial epithel",delta:44.176},{track:"CAGE:non-small cell lung cance",delta:-23.25},{track:"CAGE:lung adenocarcinoma cell ",delta:20.182},{track:"CHIP:H3K27ac:lung male child (",delta:11.992},{track:"DNASE:lung male embryo (82 day",delta:-11.218}]},{id:"chr7:122995514:T>A",total_impact:2239.2,top_tracks:[{track:"CHIP:H3K4me3:A673",delta:14.965},{track:"CAGE:neuroectodermal tumor cel",delta:8.375},{track:"CHIP:H3K4me3:SK-N-MC",delta:7.991},{track:"CAGE:neuroblastoma cell line:N",delta:7.981},{track:"CHIP:H3K27ac:A673",delta:7.508},{track:"CAGE:neuroepithelioma cell lin",delta:7.145},{track:"CHIP:H3K27ac:SK-N-MC",delta:6.641},{track:"DNASE:A673",delta:6.51},{track:"CAGE:peripheral neuroectoderma",delta:6.401},{track:"CHIP:H3K9me3:right cardiac atr",delta:5.823}],lung_tracks:[{track:"DNASE:pulmonary artery endothe",delta:1.359},{track:"DNASE:fibroblast of lung male ",delta:1.149},{track:"CHIP:NR3C1:A549 treated with 0",delta:1.053},{track:"CHIP:NR3C1:A549 treated with 1",delta:0.855},{track:"CHIP:TAF1:A549 treated with 0.",delta:-0.851}]},{id:"chr7:130404705:T>G",total_impact:15672.6,top_tracks:[{track:"CAGE:pancreas, adult,",delta:-263.54},{track:"CHIP:H3K27ac:KOPT-K1",delta:82.526},{track:"CAGE:duodenum, fetal, , tech_",delta:-49.206},{track:"CHIP:H3K36me3:CD14-positive mo",delta:-45.663},{track:"CHIP:H3K27ac:OCI-LY1",delta:41.79},{track:"CHIP:H3K79me2:fibroblast of lu",delta:-40.307},{track:"CHIP:H3K27ac:endocrine pancrea",delta:-40.14},{track:"CHIP:H3K27ac:placenta female e",delta:40.03},{track:"CHIP:H3K27ac:CD4-positive, CD2",delta:-39.172},{track:"CHIP:H3K27ac:thymus female emb",delta:37.328}],lung_tracks:[{track:"DNASE:left lung male embryo (8",delta:-35.265},{track:"DNASE:lung female embryo (76 d",delta:-35.258},{track:"DNASE:lung female embryo (120 ",delta:-30.095},{track:"DNASE:lung embryo (80 days) an",delta:-29.407},{track:"DNASE:lung female embryo (108 ",delta:-28.687}]},{id:"chr7:134530730:G>T",total_impact:7279.7,top_tracks:[{track:"CAGE:lung adenocarcinoma cell ",delta:-241.2},{track:"CAGE:bile duct carcinoma cell ",delta:-118.309},{track:"CHIP:H3K4me3:A549",delta:-106.934},{track:"CAGE:hepatoma cell line:Li-7",delta:-91.911},{track:"CAGE:mucinous adenocarcinoma c",delta:-88.86},{track:"CHIP:RBFOX2:HepG2",delta:-71.289},{track:"CHIP:H3K27ac:A549 treated with",delta:-56.943},{track:"CHIP:POLR2G:HepG2",delta:-56.008},{track:"CHIP:H3K9ac:A549 treated with ",delta:-49.13},{track:"CAGE:large cell lung carcinoma",delta:-49.092}],lung_tracks:[{track:"CAGE:lung adenocarcinoma cell ",delta:-241.2},{track:"CHIP:H3K4me3:A549",delta:-106.934},{track:"CHIP:H3K27ac:A549 treated with",delta:-56.943},{track:"CHIP:H3K9ac:A549 treated with ",delta:-49.13},{track:"CAGE:large cell lung carcinoma",delta:-49.092}]},{id:"chr7:138861306:C>A",total_impact:9329.2,top_tracks:[{track:"CHIP:H3K36me3:common myeloid p",delta:72.27},{track:"CHIP:H3K36me3:Loucy",delta:66.519},{track:"CHIP:H3K27ac:PC-3",delta:-37.635},{track:"CHIP:H3K36me3:KOPT-K1",delta:34.706},{track:"CHIP:H3K36me3:mesodermal cell ",delta:34.624},{track:"CHIP:H3K36me3:IMR-90",delta:30.519},{track:"CHIP:H3K36me3:iPS-20b male adu",delta:29.845},{track:"CHIP:H3K36me3:HUES48",delta:29.685},{track:"CHIP:H3K36me3:HUES64",delta:29.644},{track:"CHIP:H3K36me3:myoepithelial ce",delta:28.351}],lung_tracks:[{track:"DNASE:left lung male embryo (8",delta:-18.743},{track:"DNASE:right lung female embryo",delta:-14.753},{track:"DNASE:lung embryo (101 day)",delta:-13.895},{track:"CHIP:H3K36me3:lung female embr",delta:13.334},{track:"DNASE:lung female embryo (85 d",delta:-12.955}]},{id:"chr7:142309018:C>G",total_impact:10283.2,top_tracks:[{track:"CAGE:CD8+ T Cells (pluriselect",delta:-537.91},{track:"CAGE:gamma delta positive T ce",delta:-441.869},{track:"CAGE:CD4+CD25+CD45RA+ naive re",delta:-374.041},{track:"CAGE:thymus, adult, pool1",delta:-348.154},{track:"CAGE:CD4+ T Cells,",delta:-313.046},{track:"CAGE:CD4+CD25-CD45RA- memory c",delta:-286.137},{track:"CAGE:CD4+CD25-CD45RA+ naive co",delta:-270.447},{track:"CAGE:CD8+ T Cells,",delta:-270.249},{track:"CAGE:thymus, fetal, pool1",delta:-264.537},{track:"CAGE:CD4+CD25+CD45RA- memory r",delta:-255.891}],lung_tracks:[{track:"CAGE:lung, adult, pool1",delta:-25.909},{track:"CAGE:lung, right lower lobe, a",delta:-12.25},{track:"CAGE:lung, fetal,",delta:-9.922},{track:"CAGE:bronchioalveolar carcinom",delta:-8.305},{track:"CAGE:small cell lung carcinoma",delta:3.539}]},{id:"chr7:147485937:G>T",total_impact:11972.5,top_tracks:[{track:"CHIP:H3K27ac:SK-N-SH",delta:-59.012},{track:"CHIP:H3K27ac:astrocyte",delta:-40.424},{track:"CHIP:H3K9me3:mammary epithelia",delta:-36.842},{track:"CHIP:H3K9me3:HepG2",delta:-34.709},{track:"CHIP:H3K27ac:PC-3",delta:-31.105},{track:"CHIP:H3K9me3:endothelial cell ",delta:29.55},{track:"CAGE:pineal gland - adult,",delta:27.697},{track:"CHIP:H3K27ac:skeletal muscle m",delta:-27.695},{track:"CHIP:H3K27ac:osteoblast",delta:-26.281},{track:"CAGE:pineal gland, adult,",delta:26.006}],lung_tracks:[{track:"DNASE:fibroblast of lung male ",delta:-16.388},{track:"DNASE:left lung male embryo (8",delta:-10.666},{track:"CHIP:H3K4me1:lung female embry",delta:-10.004},{track:"CHIP:H2AFZ:fibroblast of lung ",delta:9.885},{track:"CHIP:H3K9me3:A549 treated with",delta:-8.955}]}],lung_top:[{track:"CAGE:squamous cell lung carcin",score:80.481},{track:"CAGE:alveolar cell carcinoma c",score:52.297},{track:"CAGE:non-small cell lung cance",score:40.9},{track:"CAGE:bronchogenic carcinoma ce",score:37.73},{track:"CAGE:Fibroblast - Lung,",score:33.767},{track:"CAGE:lung, fetal,",score:24.908},{track:"CAGE:bronchial squamous cell c",score:24.264},{track:"CAGE:lung adenocarcinoma cell ",score:23.585},{track:"CAGE:lung, adult, pool1",score:22.584},{track:"CAGE:Fibroblast - Pulmonary Ar",score:20.132}]};
+const D_DR={variants:[{id:"chr12:25245351:C>A",gene:"KRAS",total_impact:26663.7,top_tracks:[{track:"CHIP:H3K36me3:KOPT-K1",delta:-171.205},{track:"CHIP:H3K36me3:CD14-positive mo",delta:-170.511},{track:"CHIP:H3K36me3:regulatory T cel",delta:-139.269},{track:"CHIP:H3K79me2:CD14-positive mo",delta:137.094},{track:"CHIP:H3K36me3:neutrophil male",delta:-130.993},{track:"CHIP:H3K79me2:bipolar neuron o",delta:105.701},{track:"CHIP:H3K36me3:HEK293",delta:-104.712},{track:"CAGE:CD14+ Monocytes,",delta:101.667},{track:"CHIP:H3K36me3:T-cell male adul",delta:-97.905},{track:"CHIP:H3K36me3:natural killer c",delta:-97.528}],lung_tracks:[{track:"CHIP:H3K36me3:lung female embr",delta:-36.435},{track:"CHIP:H3K36me3:lung male child ",delta:-35.282},{track:"CHIP:H3K36me3:bronchial epithe",delta:-35.062},{track:"CAGE:bronchial squamous cell c",delta:-31.085},{track:"CAGE:Fibroblast - Pulmonary Ar",delta:-30.077}]},{id:"chr17:7674291:C>G",gene:"TP53",total_impact:156457.1,top_tracks:[{track:"CAGE:Mesenchymal stem cells - ",delta:-1546.103},{track:"CAGE:Fibroblast - Periodontal ",delta:-1140.816},{track:"CAGE:Alveolar Epithelial Cells",delta:-1064.035},{track:"CAGE:Fibroblast - Mammary,",delta:-1016.548},{track:"CAGE:Trabecular Meshwork Cells",delta:-939.313},{track:"CAGE:Fibroblast - skin walker ",delta:-925.192},{track:"CAGE:Hepatic Stellate Cells (l",delta:-904.241},{track:"CAGE:Fibroblast - Villous Mese",delta:-886.448},{track:"CAGE:Smooth Muscle Cells - Cor",delta:-885.591},{track:"CAGE:Smooth Muscle Cells - Ute",delta:-844.411}],lung_tracks:[{track:"CAGE:Alveolar Epithelial Cells",delta:-1064.035},{track:"CAGE:Fibroblast - Pulmonary Ar",delta:-771.282},{track:"CAGE:squamous cell lung carcin",delta:-766.131},{track:"CAGE:lung adenocarcinoma cell ",delta:-520.058},{track:"CAGE:alveolar cell carcinoma c",delta:-511.264}]},{id:"chr7:55191822:T>G",gene:"EGFR",total_impact:44354.6,top_tracks:[{track:"CAGE:Urothelial cells,",delta:-571.049},{track:"CAGE:placenta, adult, pool1",delta:-427.441},{track:"CAGE:chorionic membrane cells,",delta:-353.396},{track:"CAGE:oral squamous cell carcin",delta:-351.99},{track:"CAGE:mucinous cystadenocarcino",delta:-350.442},{track:"CAGE:amniotic membrane cells,",delta:-337.818},{track:"CAGE:papillotubular adenocarci",delta:-302.693},{track:"CAGE:pharyngeal carcinoma cell",delta:-283.674},{track:"CAGE:Gingival epithelial cells",delta:-277.058},{track:"CAGE:Intestinal epithelial cel",delta:-273.728}],lung_tracks:[{track:"CAGE:bronchogenic carcinoma ce",delta:-264.875},{track:"CAGE:lung adenocarcinoma, papi",delta:-202.657},{track:"CAGE:Alveolar Epithelial Cells",delta:-202.24},{track:"CAGE:bronchial squamous cell c",delta:-182.25},{track:"CAGE:lung adenocarcinoma cell ",delta:-134.325}]},{id:"chr19:10499603:G>A",gene:"KEAP1",total_impact:47617.5,top_tracks:[{track:"CAGE:Alveolar Epithelial Cells",delta:400.446},{track:"CAGE:Endothelial Cells - Arter",delta:345.466},{track:"CAGE:Mesenchymal stem cells - ",delta:338.764},{track:"CAGE:Trabecular Meshwork Cells",delta:325.667},{track:"CAGE:Smooth Muscle Cells - Cor",delta:285.733},{track:"CAGE:Renal Proximal Tubular Ep",delta:272.808},{track:"CAGE:Keratinocyte - oral,",delta:271.496},{track:"CAGE:Renal Glomerular Endothel",delta:268.883},{track:"CAGE:Corneal Epithelial Cells,",delta:265.186},{track:"CAGE:Renal Mesangial Cells,",delta:263.849}],lung_tracks:[{track:"CAGE:Alveolar Epithelial Cells",delta:400.446},{track:"CAGE:Fibroblast - Pulmonary Ar",delta:235.563},{track:"CAGE:Bronchial Epithelial Cell",delta:212.803},{track:"CAGE:non-small cell lung cance",delta:209.867},{track:"CAGE:bronchial squamous cell c",delta:208.455}]},{id:"chr7:116699579:G>A",gene:"MET",total_impact:55596.4,top_tracks:[{track:"CAGE:Urothelial cells,",delta:775.391},{track:"CAGE:Gingival epithelial cells",delta:557.262},{track:"CAGE:Keratinocyte - oral,",delta:517.152},{track:"CHIP:H3K79me2:endothelial cell",delta:-452.784},{track:"CAGE:Urothelial Cells,",delta:405.304},{track:"CAGE:nasal epithelial cells, ,",delta:403.46},{track:"CAGE:Mallassez-derived cells,",delta:388.439},{track:"CAGE:epidermoid carcinoma cell",delta:368.391},{track:"CAGE:Mallassez-derived cells, ",delta:336.003},{track:"CAGE:Small Airway Epithelial C",delta:327.415}],lung_tracks:[{track:"CAGE:bronchial squamous cell c",delta:267.957},{track:"CAGE:lung adenocarcinoma, papi",delta:228.551},{track:"CAGE:Bronchial Epithelial Cell",delta:209.035},{track:"CAGE:squamous cell lung carcin",delta:181.639},{track:"CAGE:lung adenocarcinoma cell ",delta:175.404}]},{id:"chr13:48367603:G>T",gene:"RB1",total_impact:39840.8,top_tracks:[{track:"CHIP:H3K36me3:KOPT-K1",delta:-348.043},{track:"CHIP:H3K36me3:CD14-positive mo",delta:-335.64},{track:"CHIP:H3K36me3:regulatory T cel",delta:-209.115},{track:"CAGE:Hodgkin's lymphoma cell l",delta:-207.127},{track:"CHIP:H3K36me3:subcutaneous abd",delta:-189.111},{track:"CHIP:H3K36me3:natural killer c",delta:-167.377},{track:"CHIP:H3K79me2:keratinocyte fem",delta:165.01},{track:"CHIP:H3K36me3:neutrophil male",delta:-164.223},{track:"CHIP:H3K36me3:upper lobe of le",delta:-162.682},{track:"CHIP:H3K36me3:stomach female a",delta:-161.465}],lung_tracks:[{track:"CHIP:H3K36me3:lung male child ",delta:-62.759},{track:"CHIP:H3K36me3:lung female adul",delta:-60.75},{track:"CHIP:H3K36me3:bronchial epithe",delta:-59.824},{track:"CHIP:H3K36me3:lung female embr",delta:-56.866},{track:"CHIP:H3K4me3:bronchial epithel",delta:40.76}]},{id:"chr9:21971078:A>G",gene:"CDKN2A",total_impact:80880.9,top_tracks:[{track:"CAGE:Urothelial cells,",delta:-771.642},{track:"CAGE:Keratinocyte - oral,",delta:-712.56},{track:"CAGE:Hep-2 cells treated with ",delta:-657.054},{track:"CAGE:Hep-2 cells mock treated,",delta:-643.389},{track:"CAGE:Gingival epithelial cells",delta:-628.8},{track:"CAGE:Urothelial Cells,",delta:-609.976},{track:"CAGE:nasal epithelial cells, ,",delta:-605.405},{track:"CAGE:Smooth Muscle Cells - Cor",delta:-601.883},{track:"CAGE:Sebocyte,",delta:-591.009},{track:"CAGE:Mallassez-derived cells, ",delta:-582.13}],lung_tracks:[{track:"CAGE:bronchial squamous cell c",delta:-517.474},{track:"CAGE:Alveolar Epithelial Cells",delta:-442.359},{track:"CAGE:squamous cell lung carcin",delta:-367.569},{track:"CAGE:Bronchial Epithelial Cell",delta:-345.856},{track:"CAGE:bronchogenic carcinoma ce",delta:-299.143}]}],gene_max:[{gene:"TP53",impact:156457.1},{gene:"CDKN2A",impact:80880.9},{gene:"MET",impact:55596.4},{gene:"KEAP1",impact:47617.5},{gene:"EGFR",impact:44354.6},{gene:"RB1",impact:39840.8},{gene:"STK11",impact:27199.8},{gene:"KRAS",impact:26663.7},{gene:"NF1",impact:8311.6},{gene:"BRAF",impact:6408.8}],lung_top:[{track:"CAGE:Alveolar Epithelial Cells",score:146.509},{track:"CAGE:bronchial squamous cell c",score:116.768},{track:"CAGE:squamous cell lung carcin",score:101.439},{track:"CAGE:bronchogenic carcinoma ce",score:91.171},{track:"CAGE:Fibroblast - Pulmonary Ar",score:85.281},{track:"CAGE:Bronchial Epithelial Cell",score:83.875},{track:"CAGE:lung adenocarcinoma, papi",score:79.335},{track:"CAGE:lung adenocarcinoma cell ",score:73.649},{track:"CAGE:large cell lung carcinoma",score:67.706},{track:"CAGE:alveolar cell carcinoma c",score:57.246}]};
+const D_PCA={points:[{id:"chr12:25245351:C>A",gene:"KRAS",total_impact:26663.7,pc1:24.5544,pc2:7.1552,cluster:-1},{id:"chr12:25245350:C>A",gene:"KRAS",total_impact:10532.4,pc1:-12.8856,pc2:-9.4063,cluster:-1},{id:"chr17:7674291:C>G",gene:"TP53",total_impact:156457.1,pc1:18.1345,pc2:-50.1084,cluster:-1},{id:"chr17:7673802:C>A",gene:"TP53",total_impact:36349.4,pc1:11.5868,pc2:-20.4245,cluster:-1},{id:"chr7:55191822:T>G",gene:"EGFR",total_impact:44354.6,pc1:-42.7847,pc2:49.439,cluster:-1},{id:"chr7:55181312:G>T",gene:"EGFR",total_impact:19269.7,pc1:-14.489,pc2:10.8769,cluster:-1},{id:"chr19:1221262:A>T",gene:"STK11",total_impact:27199.8,pc1:3.815,pc2:-3.3829,cluster:-1},{id:"chr19:1207169:C>T",gene:"STK11",total_impact:15979.3,pc1:-13.483,pc2:1.5076,cluster:-1},{id:"chr19:10499603:G>A",gene:"KEAP1",total_impact:47617.5,pc1:6.2478,pc2:4.0862,cluster:-1},{id:"chr19:10499688:G>A",gene:"KEAP1",total_impact:14676.3,pc1:4.1669,pc2:-8.5485,cluster:-1},{id:"chr17:31229130:A>T",gene:"NF1",total_impact:7317.1,pc1:-4.719,pc2:0.2884,cluster:-1},{id:"chr17:31159046:C>G",gene:"NF1",total_impact:8311.6,pc1:0.0155,pc2:-4.034,cluster:0},{id:"chr7:140753393:T>C",gene:"BRAF",total_impact:6408.8,pc1:-4.8597,pc2:-8.3126,cluster:-1},{id:"chr7:140753355:C>T",gene:"BRAF",total_impact:2396.1,pc1:-0.4803,pc2:-2.974,cluster:0},{id:"chr7:116699579:G>A",gene:"MET",total_impact:55596.4,pc1:-92.6005,pc2:12.8266,cluster:-1},{id:"chr7:116757651:C>G",gene:"MET",total_impact:10408.5,pc1:0.7212,pc2:2.5826,cluster:-1},{id:"chr13:48367603:G>T",gene:"RB1",total_impact:39840.8,pc1:74.5876,pc2:75.6843,cluster:-1},{id:"chr13:48377030:C>G",gene:"RB1",total_impact:6887.3,pc1:0.3907,pc2:4.8572,cluster:-1},{id:"chr9:21971146:G>C",gene:"CDKN2A",total_impact:61147.3,pc1:17.8071,pc2:-26.4151,cluster:-1},{id:"chr9:21971078:A>G",gene:"CDKN2A",total_impact:80880.9,pc1:24.2745,pc2:-35.6976,cluster:-1}],cluster_info:{"0":{count:2,avg_impact:5353.8,top_tracks:[{track:"CAGE:CD8+ T Cells (pluriselect",score:134.3},{track:"CAGE:gamma delta positive T ce",score:124.52},{track:"CAGE:CD4+CD25+CD45RA- memory r",score:54.26},{track:"CHIP:H3K4me3:CD4-positive, alp",score:48.43},{track:"CAGE:CD4+CD25+CD45RA+ naive re",score:46.67}]},"-1":{count:18,avg_impact:37088.2,top_tracks:[{track:"CAGE:Urothelial cells,",score:205.83},{track:"CAGE:Keratinocyte - oral,",score:175.71},{track:"CAGE:Hep-2 cells treated with ",score:166.11},{track:"CAGE:Hep-2 cells mock treated,",score:166.0},{track:"CAGE:Alveolar Epithelial Cells",score:162.47}]}},variance:{pc1:23.0,pc2:17.0}};
+
+const BDATA = {"G12C":{"atac":[-0.00643,-0.00077,-0.0008,-0.00047,-0.00059,-0.00057,-0.00058,-0.00064,-0.00064,-0.00051,-0.00088,-0.00052,-0.00078,-0.00061,-0.00055,0.00039,-0.00039,-0.0005,-0.00039,-0.00038,-0.00045,-0.00056,-0.00058,-0.00052,-0.00061,-0.00043,-0.00024,-0.00044,-0.00054,-0.00033,-0.00034,-0.00042,-0.00036,-0.00098,-0.00106,-0.00042,-0.00049,-0.00038,-0.00053,-0.00044,-0.00045,-0.00029,-0.0007,-0.00047,-0.00039,-0.00056,-0.00074,-0.00068,-0.00129,-0.00048,-0.00018,-0.00013,-0.00145,0.00019,0.00118,0.0054,-0.00683,-0.01497,-0.0114,-0.01638,0.00047,-0.00408,-0.00189,-0.00246,-0.00123,-0.00082,-0.00119,-0.00133,-0.00142,-0.00073,-0.00064,-0.00077,-0.00109,-0.00089,-0.0019,-0.00284,-0.00436,-0.00351,-0.00409,-0.00358,-0.00382,-0.00382,-0.00239,-0.00156,-0.00163,-0.00182,-0.00085,-1e-05,-0.0,-0.00059,-5e-05,-0.0006,-0.00073,-0.0009,-0.00126,-0.00085,-0.00079,-0.00131,-0.00118,-0.00129,-0.00139,-0.00166,-0.00176,-0.00266,-0.0024,-0.00224,-0.00118,-0.00144,-0.00109,-0.00173,-0.00221,-0.00279,-0.00247,-0.00209,-0.00186,-0.00192,-0.00205,-0.0015,-0.00176,-0.00214,-0.00218,-0.00185,-0.00168,-0.00114,-0.00112,-0.00095,-0.00089,-0.00107,-0.00107,-0.00095,-0.00101,-0.00108,-0.00081,-0.00066,-0.00057,-0.00029,-0.0004,-0.00097,-0.00129,-0.00201,-0.00115,-0.00091,-0.00181,-0.00109,-0.0014,-0.00224,-0.00136,-0.00091,-0.00123,-0.00198,-0.00136,-0.00153,-0.00104,-0.00118,-0.00103,-0.00094,-0.00065,-0.00093,-0.00124,-0.001,-0.0009,-0.00139,-0.00113,-0.00073,-0.00064,-0.00018,0.00039,-0.00017,-0.00046,-0.00086,-0.00117,-0.00065,-0.00031,-0.00027,-0.00028,-0.00025,-8e-05,0.00032,0.00144,0.00415,0.01427,0.00237,-5e-05,0.00072,0.00022,-8e-05,-0.00016,-3e-05,0.00267,0.00274,0.00355,0.00139,-0.00058,-0.00073,-0.00053,-0.00044,-0.00039,-0.00076,-0.0008,-0.00064,-0.00085,-0.00087,-0.00092,-0.00084,-0.00069,-0.00074,-0.00114,-0.00175,-0.0016,-0.0012,-0.00077,-0.00033,-0.00071,-0.00064,-8e-05,-0.00043,-0.00019,-0.00039,-0.00047,-0.0004,-0.00065,-0.00094,-0.00103,-0.00062,-0.00054,-0.00074,-0.00078,-0.00097,-0.00087,-0.00082,-0.00084,-0.00103,-0.00096,-0.00086,-0.00057,-0.00045,-0.00035,-0.00027,-0.00026,-0.00024,-0.00062,-0.00048,-0.001,-0.00097,-0.00049,0.0001,0.00106,0.00062,-0.00029,-0.00045,-0.00067,-0.00118,-0.00085,-0.00116,-0.00148,-0.00207,-0.0018,-0.00164,-0.00102,-0.00107,-0.00126,-0.00109,-0.00078,-0.00058,-0.00096,-0.00087,-0.00072,-0.00022,-0.00027,-0.0004,-0.00038,-0.00062,-0.00013,-0.0002,-0.00036,-0.00047,-0.00033,-0.00048,-0.0005,-0.00034,-0.00052,-0.00017,-0.00035,-0.00095,-4e-05,-0.00017,-0.00023,1e-05,-7e-05,2e-05,0.00022,-7e-05,0.00044,-0.00146,-0.00098,-0.00083,-2e-05,0.00017,0.00032,0.00077,0.0014,0.00146,0.0001,0.00094,0.00099,0.00039,-0.00065,0.00045,0.00049,0.00054,0.00107,0.00127,0.00033,-0.00071,-0.00053,4e-05,0.00071,0.00048,0.0007,-0.00032,0.00022,0.00059,0.00058,0.00116,0.00083,0.00148,0.00117,0.001,0.00108,0.00116,0.0,-0.00046,-0.00018,0.00057,0.00047,0.00138,0.00184,0.00053,0.0007,0.00101,0.00107,0.0001,0.00071,0.00057,0.00074,0.00075,0.00057,0.00018,0.00025,-0.0,0.00021,0.00037,0.01174,0.00134,0.00025,0.00231,0.00186,0.00279,0.00024,0.00046,-4e-05,0.00073,0.00126,0.00076,0.00137,0.00179,0.00099,0.00171,0.00092,0.00162,0.00244,0.00227,0.00352,0.00347,0.00718,0.0106,0.01846,0.02858,0.01408,0.00781,0.01429,0.05129,0.02075,0.00742,0.0052,0.00547,0.00711,0.00625,0.00433,0.00501,0.00284,0.00177,0.00144,0.00035,0.00131,0.00234,0.00242,0.00219,0.00705,0.00254,0.00182,0.00174,0.00215,0.00349,0.00215,0.00216,0.00234,0.0025,0.00422,0.00514,0.00783,0.00558,0.00501,0.015,0.03465,0.02668,0.04201,0.04239,0.03142,0.0406,0.03636,0.01333,0.0071,0.00619,0.00262,0.00247,0.00661,0.00287,0.00399,0.00189,0.00429,0.00516,0.00483,0.00531,0.00743,0.00564,0.00973,0.00472,0.00738,0.00446,0.00328,0.00339,0.0011,0.00056,-6e-05,0.00228,0.00228,-0.01015,0.00243,0.00502,0.01182,0.01276,0.00677,0.00459,0.00321,0.00177,0.00022,-9e-05,8e-05,-0.00114,-0.00041,5e-05,-0.0,0.00189,0.00252,0.00322,0.0018,0.00047,0.00036,5e-05,9e-05,-0.00023,0.00119,0.00159,0.00196,0.00257,0.00289,0.00477,0.00361,0.01334,0.01929,0.03488,0.03763,0.05837,0.07532,0.04208,0.01386,-0.00165,-8e-05,0.00135,-0.0183,-0.01668,-0.01114,0.00264,-0.01403,-0.01353,-0.01837,-0.00802,-0.00239,-0.0015,0.00098,-0.0002,-0.00052,-0.00014,0.00023,0.00026,0.00088,0.00087,0.00022,0.00115,0.00716,0.0392,0.03702,0.00214,0.01837,0.00425,-0.00095,-0.00076,0.00089,0.00085,0.00028,0.0005,-0.00096,-0.00083,-0.00068,-0.00084,-0.0009,-0.0013,-0.00102,-0.00105,-0.00083,-0.0007,-0.00103,-0.00089,-0.00095,-0.00142,-0.00118,-0.00148,-0.00208,-0.00179,-0.00192,-0.0014,-0.00131,-0.00135,-0.00094,-0.00073,-0.00056,-0.00072,-0.00084,-0.00056,-0.00072,-0.00077,-0.00083,-0.00085,-0.0005,-0.00054,-0.00079,-0.00074,-0.00057,-0.00046,-0.00081,-0.00071,-0.00068,-0.00069,-0.0004,-0.00058,-0.00035,-0.00034,-0.00026,-0.0004,-0.00028,-0.00027,-0.00017,-0.00016,-0.00015,-0.00022,-0.0002,-0.00017,-0.00031,-0.00033,-0.00032,-0.00035,-0.00047,-0.00026,-0.00046,-0.0005,-0.00058,-0.00081,-0.00081,-0.00092,-0.00143,-0.0045,-0.00411,-0.00285,-0.0035,-0.00636,-0.01039,-0.00326,-0.00175,-0.00138,-0.00124,-0.00097,-0.00116,-0.00092,-0.00059,-0.00062,-0.00081,-0.00086,-0.00118,-0.00083,-0.00124,-0.001,-0.00098,-0.0013,-0.00115,-0.00122,-0.00061,-0.00049,-0.00045,-0.00054,-0.00042,-0.00041,-0.00063,-0.0006,-0.00081,-0.0006,-0.0007,-0.00044,-0.00074,-0.00075,-0.00061,-0.00056,-0.00043,-0.00049,-0.00022,0.00023,0.00124,0.00731,0.05542,0.07193,0.0777,0.04657,0.00636,0.00068,0.00022,-0.00046,-0.00068,-0.00032,-0.00019,-0.00031,-0.00023,-0.00036,-0.00037,-0.00052,-0.00018,-0.00037,-0.00035,-0.00024,-0.00049,-0.00053,-0.00045,-0.00055,-0.00025,-0.0004,-0.00031,-0.00025,-0.0006,-0.00049,-0.00052,-0.00027,-0.00025,-0.00027,-1e-05,-0.00054,-0.00058,-0.00067,-0.00108,-0.00121,-0.00126,-0.00088,-0.00096,-0.0006,-0.00062,-0.0006,-0.0009,-0.00126,-0.00077,-0.00083,-0.0037,-0.01076,-0.00965,-0.00371,-0.005,0.00043,-0.00029,0.00013,-0.00028,-0.00048,-0.00093,-0.00083,-0.00042,-0.0004,-0.00028,-0.00032,-0.00058,-0.00058,-0.00055,-4e-05,-0.00032,-0.00034,-0.00037,-0.00056,-0.00045,-0.00053,-0.00041,-0.00033,-0.00027,-0.00018,-6e-05,2e-05,0.00184,0.00046,-4e-05,-0.00068,-0.00014,-0.00108,-0.00072,-0.00068,-0.00075,-0.00066,-0.00085,-0.00093,-0.00078,-0.00061,-0.00053,-0.00085,-0.00086,-0.00101,-0.00376,-0.00435,-0.00246,-0.00243,-0.00188,-0.00155,-0.00156,-0.00198,-0.00119,-0.00081,-0.00145,-0.00179,-0.00053,-0.00035,-0.00042,-0.00058,-0.00057,-0.00057,-0.00046,-0.00032,-0.00022,-0.00039,-0.00032,-0.00042,-0.00033,-0.00038,-0.00025,-0.00025,-0.00025,-0.0006,-0.00024,-0.00019,-4e-05,-6e-05,0.00011,-6e-05,-8e-05,-5e-05,-0.00021,-0.0003,-0.0003,-0.0003,-0.00027,-0.00016,-2e-05,-3e-05,-8e-05,-0.00012,-3e-05,-1e-05,-1e-05,-6e-05,-1e-05,0.0,-0.00012,-0.00031,-0.00015,-0.0002,-0.00014,-0.00012,-0.00023,-0.00012,-0.00014,-0.00052,-0.00021,-0.00036,-0.00032,-0.0006,-0.00161,-8e-05,-0.00024,-0.0003,-0.00033,-0.0004,-0.00061,-0.00066,-0.0006,-0.00096,-0.001,-0.00096,-0.00159,-0.00592,-0.00281,-0.00307,-0.00118,-0.00092,-0.00065,-0.00107,-0.00124,-0.00093,-0.00087,-0.00081,-0.00057,-0.00069,-0.00086,-0.00091,-0.001,-0.00084,-0.00079,-0.0005,-0.00067,-0.00085,-0.0013,-0.00057,-0.0006,-0.00061,-0.00067,-0.00041,-0.00069,-0.0008,-0.00097,-0.00067,-0.00074,-0.00071,-0.00104,-0.00054,-0.00068,-0.00077,-0.00071,-0.00134,-0.00096,-0.00055,-0.00052,-0.00035,-0.00027,-0.00039,-0.00029,-0.00044,-0.00034,-0.00029,-0.00035,-0.00041,-0.00024,-0.00035,-0.00048,-0.00045,-0.00017,-0.0002,-0.00027,-0.00027,-0.00025,-0.00023,-0.00027,-0.00038,-0.00036,-0.00015,-0.00015,-0.00015,-0.00016,-8e-05,3e-05,8e-05,4e-05,4e-05,-9e-05,-0.00013,-0.00019,-0.00024],"h3k27":[0.00011,0.0003,0.00048,0.00027,0.00017,0.00013,0.00015,0.00042,0.0003,0.0003,0.00013,1e-05,0.00025,0.00052,0.0003,0.00097,0.0001,0.0001,9e-05,7e-05,-2e-05,-6e-05,-3e-05,5e-05,0.00012,0.00012,0.00015,-5e-05,1e-05,1e-05,-9e-05,-7e-05,-8e-05,-0.00019,-0.0002,-8e-05,-7e-05,-3e-05,-6e-05,-3e-05,-6e-05,-0.00012,-0.00031,-0.00029,-0.00012,2e-05,7e-05,0.00036,0.00049,0.00139,0.00215,0.00285,0.00696,0.01278,0.01392,-0.00178,-0.0173,-0.00424,0.00466,0.00842,0.01009,0.00721,0.00314,0.00031,0.00073,0.00137,0.00225,0.00278,0.00229,0.00158,0.00094,0.00062,0.00019,0.00018,0.00035,0.00057,0.00041,0.0005,0.00073,0.00115,0.0017,0.00168,0.00106,0.00085,0.00135,0.00161,0.00043,-4e-05,-1e-05,-2e-05,-6e-05,3e-05,-2e-05,-0.00013,0.00019,-5e-05,-0.00011,0.00012,0.00061,0.00062,0.00017,0.00042,0.00138,0.00179,0.00099,-0.00012,-0.00063,-0.0009,-0.00079,-0.00065,-0.00102,-0.00182,-0.00186,-0.00162,-0.00167,-0.00149,-0.00187,-0.00166,-0.00158,-0.00172,-0.00151,-0.00158,-0.00158,-0.00114,-0.0011,-0.00149,-0.00234,-0.00213,-0.00185,-0.00156,-0.00155,-0.00159,-0.00153,-0.00185,-0.00177,-0.00032,0.00021,-0.00115,-0.0018,-0.00136,-0.00115,-0.00138,-0.00163,-0.00167,-0.0018,-0.00212,-0.00137,-0.00124,-0.0017,-0.00191,-0.00124,-0.00171,-0.00095,-0.00065,-0.00047,-0.00041,-0.00033,3e-05,0.00032,0.00033,0.00044,0.00043,0.00132,0.00147,0.00093,0.00045,0.00089,0.00128,0.00135,0.00119,0.00048,-0.0005,-0.0012,-0.00153,-0.00149,-0.00117,-0.00111,-0.00118,-0.001,-0.00151,-0.00183,-0.00074,-0.00064,-0.00077,-0.00082,-0.00128,-0.00174,-0.00181,-0.00218,-0.00233,-0.00255,-0.00216,-0.00161,-0.00214,-0.00278,-0.00227,-0.00142,-0.00162,-0.00185,-0.00197,-0.00164,-0.00162,-0.00152,-0.00139,-0.00163,-0.00127,-0.00111,-0.00106,-0.00168,-0.0021,-0.00176,-0.0003,-0.00087,-0.00135,-0.00169,-0.00158,-0.00118,-0.0013,-0.0015,-0.00142,-0.0016,-0.00189,-0.00201,-0.00157,-0.00135,-0.00115,-0.00138,-0.00199,-0.00143,-0.00115,-0.00132,-0.00162,-0.00212,-0.00156,-0.00111,-0.001,-0.00114,-0.00177,-0.00201,-0.00191,-0.00159,-0.00121,-0.00102,-0.00149,-0.00141,-0.00132,-0.00168,-0.00174,-0.00128,-0.00069,-0.00098,-0.00143,-0.00088,-0.00105,-0.00111,-0.00134,-0.00142,-0.00117,-0.00117,-0.00169,-0.00203,-0.00205,-0.00191,-0.00164,-0.00124,-0.00078,-0.00043,-0.00031,-0.00088,-0.00111,-0.00122,-0.00142,-0.00221,-0.00211,-0.00166,-0.0012,-0.00147,-0.00175,-0.00151,-0.0015,-0.00189,-0.00149,-0.00059,-0.00074,-0.00081,-0.00039,-0.00092,-0.00101,-0.00057,-0.00048,-0.00011,1e-05,7e-05,0.00182,0.00312,0.00108,-0.00015,-0.00013,-0.00035,2e-05,0.00018,-0.00019,-0.00019,-0.00045,-0.00076,-0.00078,7e-05,-0.00018,-0.00139,-0.00137,-0.00143,-0.00127,-0.001,-0.00144,-0.00121,-0.00132,-0.00168,-0.00154,-0.00122,-0.00096,-0.00094,-0.00079,-0.00088,-0.0011,-0.00105,-0.00119,-0.00129,-0.00151,-0.00167,-0.0015,-0.00151,-0.00192,-0.00207,-0.0013,-0.0013,-0.00219,-0.00198,-0.00201,-0.00272,-0.0026,-0.00252,-0.00203,-0.0016,-0.00365,-0.00433,-0.00357,-0.00267,-0.00197,-0.0021,-0.00278,-0.00296,-0.00297,0.00886,-0.00461,-0.00404,0.00068,-0.00334,-0.00285,-0.00215,-0.00161,-0.00096,-0.00207,-0.00272,-0.00293,-0.0029,-0.00274,-0.0026,-0.00294,-0.00311,-0.00299,-0.00312,-0.0033,-0.00416,-0.00412,-0.00466,-0.00705,-0.00636,-0.00702,-0.00939,-0.00976,-0.0073,-0.00584,-0.0045,-0.00529,-0.00506,-0.00393,-0.00404,-0.00377,-0.00375,-0.00431,-0.0038,-0.00313,-0.00367,-0.0031,-0.00303,-0.00405,-0.00365,-0.00397,-0.00565,-0.00467,-0.00384,-0.00434,-0.00435,-0.00578,-0.00692,-0.00467,-0.00395,-0.00446,-0.00372,-0.0039,-0.00441,-0.00269,-0.00113,-0.00072,0.00392,4e-05,-0.00143,-0.00475,-0.00622,-0.00879,-0.00706,-0.00344,0.00074,-0.00803,-0.00537,-0.00648,-0.00607,-0.00611,-0.00363,-0.00271,0.00166,0.00399,0.00227,0.00294,0.00145,-0.00187,0.00018,-0.00134,-0.00133,-0.00309,-0.00239,-0.0021,-0.00285,-0.00299,-0.0024,-0.0024,0.00347,-0.00158,-0.01554,-0.00322,-0.00249,-0.00135,-0.00339,-0.00489,-0.00425,-0.00627,-0.00833,-0.00714,-0.00429,-0.00304,-0.004,-0.004,-0.00436,-0.00552,-0.00596,-0.0055,-0.0051,-0.00342,-0.00225,-0.00366,-0.00244,-0.00296,-0.00204,-0.00206,-0.00092,-0.00219,-0.00162,0.00318,0.0045,0.00682,0.00889,0.01479,0.02133,0.03597,0.07756,0.09445,0.17462,0.13708,0.11072,0.09003,0.05337,0.0005,0.01686,0.00189,-0.00778,-0.02689,-0.03933,-0.03739,-0.0253,-0.01465,-0.00901,-0.00445,-0.00264,-0.00176,-0.00142,-0.00127,-0.00163,-0.00176,-0.0013,-0.00159,-0.0013,-0.001,-0.00086,-0.00128,-0.00019,-2e-05,-0.00191,-0.00124,0.00019,0.00047,0.0017,0.00231,0.00129,0.00116,0.00177,0.00133,0.00055,0.00086,0.00205,0.00188,0.0011,0.0005,0.00011,0.00032,6e-05,-0.0004,-0.00032,-0.00041,-0.00083,-0.00158,-0.00183,-0.00097,-0.00039,0.00019,7e-05,6e-05,6e-05,0.00056,0.00076,0.00031,0.00032,0.00011,-0.00017,-0.00034,-0.00019,-0.00016,-0.00035,-0.00034,-0.00024,-0.00026,-0.00029,-0.00029,-0.00032,-0.00049,-0.00027,-0.00057,-0.00039,-0.00036,-0.00031,-0.0003,-0.0002,-0.00019,-0.00015,-0.00011,-0.00014,-0.0002,-0.00015,-6e-05,-6e-05,-0.00011,-0.00019,-0.00038,-0.00044,-0.00055,-0.00051,-0.00077,-0.00095,-0.00103,-0.00155,-0.00284,-0.00382,-0.00259,-0.00251,-0.00323,-0.00312,-0.00335,-0.00321,-0.00297,-0.00239,-0.00182,-0.00161,-0.00167,-0.00117,-0.00092,-0.00082,-0.00092,-0.00106,-0.00098,-0.00094,-0.00114,-0.00119,-0.00119,-0.00115,-0.00103,-0.00106,-0.00109,-0.00076,-0.00078,-0.00078,-0.00079,-0.00055,-0.00058,-0.00064,-0.00063,-0.0006,-0.00062,-0.00021,-0.00025,-0.00029,-0.00065,-0.00051,-0.00046,-0.00049,-0.00047,-0.00052,-0.00054,-0.00064,-0.0006,-0.00052,-0.00042,-0.00048,-0.0005,-0.00023,-0.00022,-0.00031,-0.00021,-0.00025,-8e-05,1e-05,-1e-05,-6e-05,-0.00021,-0.0002,-0.00022,-0.00022,-0.00019,-0.00018,-0.0002,-0.00031,-0.0002,-0.00013,-8e-05,-0.00011,-0.00012,9e-05,0.00014,0.00029,0.00069,0.00056,0.00047,9e-05,0.0003,0.00016,-0.00019,-0.0005,-0.00048,-0.00041,-0.0007,-0.00091,-0.0006,-0.00115,-0.00053,-0.00057,-0.00052,-0.00057,-0.00079,-0.00097,-0.00146,-0.00125,-0.00125,-0.00116,0.00275,-0.00738,0.00035,0.00021,0.001,0.00041,0.00024,2e-05,-3e-05,-0.00013,-8e-05,-5e-05,-0.00014,-0.00019,-0.00038,-0.00024,0.00021,-9e-05,-0.00012,-0.00012,-9e-05,-6e-05,-0.00026,-0.00051,-0.00036,-0.00032,-0.00038,-0.00061,-0.00066,0.00017,0.00019,0.00026,2e-05,-3e-05,4e-05,0.00022,0.00012,3e-05,-4e-05,-9e-05,-0.00026,-1e-05,5e-05,8e-05,0.00029,0.00047,0.00059,0.00046,0.00082,0.0012,0.00077,0.00111,0.00087,0.00025,0.00031,0.00149,0.00077,0.0005,0.00053,0.00018,0.00019,-8e-05,-0.0001,-0.00027,-0.00019,-0.0001,-4e-05,-0.00014,-0.00027,-0.00012,-9e-05,-0.0001,-0.00017,-0.00019,-0.00017,-8e-05,-0.00037,-4e-05,-0.00012,-4e-05,9e-05,0.00016,9e-05,8e-05,0.00017,-9e-05,-0.00031,-0.00027,-0.00015,-0.00017,-0.00021,-0.00012,-8e-05,-0.00014,-4e-05,2e-05,-1e-05,-4e-05,-7e-05,-2e-05,-1e-05,-4e-05,-7e-05,-0.00013,-0.00014,-0.00014,-0.00011,-0.00011,-0.00017,-0.00022,-0.00018,-0.00021,-0.00023,-0.00021,-0.00023,-0.00016,6e-05,-7e-05,-0.00013,-0.00022,-0.00029,-0.00019,-0.00015,-0.00014,-0.00026,-0.0005,-0.00044,-0.00058,-0.00056,-0.00043,-0.00038,-0.00058,-0.00031,-0.00024,-0.00035,-0.00029,-0.00031,-0.00037,-0.00025,-7e-05,-9e-05,-0.00011,-0.0001,-0.00013,-0.00011,-9e-05,-6e-05,-0.00027,-9e-05,-7e-05,-2e-05,-3e-05,-0.0001,-0.0001,-1e-05,-0.0,-0.0001,-9e-05,-3e-05,-4e-05,-0.0,2e-05,-3e-05,-4e-05,-0.00016,-0.00016,-0.00011,-9e-05,-0.0001,-0.00013,-0.0001,-0.00018,-0.00017,-0.00015,-0.0001,-7e-05,-0.00011,-0.00019,-7e-05,-8e-05,-0.00022,-0.00015,-6e-05,-3e-05,-6e-05,-8e-05,-0.00014,-0.00036,-0.00042,-0.00038,-0.0003,-0.00024,-0.00025,-0.00041,-0.00047,-0.00042,-0.00031,-0.00027,-0.00024,-0.00015,-0.00011,-0.00015,-0.00011,-0.00013,-0.00011],"h3k4":[2e-05,0.00014,0.00014,6e-05,3e-05,-1e-05,1e-05,4e-05,3e-05,5e-05,3e-05,-1e-05,1e-05,9e-05,6e-05,0.00078,7e-05,4e-05,4e-05,3e-05,3e-05,3e-05,1e-05,1e-05,3e-05,4e-05,0.0001,3e-05,2e-05,2e-05,-3e-05,-1e-05,-0.0,-5e-05,-5e-05,-1e-05,0.0,-1e-05,-2e-05,-2e-05,-2e-05,-3e-05,-7e-05,-7e-05,-8e-05,-3e-05,8e-05,0.00017,0.00037,0.00126,0.00092,0.00072,-0.00048,-0.00397,-0.00854,-0.02342,-0.03323,-0.00912,-0.00329,-0.00677,-0.00247,-0.00806,-0.01061,-0.00905,-0.00472,-0.00227,-0.00065,-0.00041,-0.00014,-3e-05,-5e-05,-0.00014,-0.0002,-0.00011,-5e-05,5e-05,6e-05,3e-05,-5e-05,7e-05,6e-05,0.0001,0.00012,0.00016,0.00024,0.0003,0.00012,-1e-05,-0.0,3e-05,-2e-05,7e-05,0.00012,0.00013,0.0002,0.0002,0.00019,0.00028,0.00037,0.00051,0.00039,0.00045,0.0007,0.00066,0.00056,0.00032,0.00024,0.00019,0.00011,5e-05,5e-05,0.00014,0.00028,0.00027,0.00021,0.0001,6e-05,5e-05,4e-05,0.00014,0.00023,9e-05,0.00011,9e-05,4e-05,-9e-05,-0.00042,-0.00019,-0.00013,-3e-05,-3e-05,-3e-05,-1e-05,-0.00026,-0.00029,0.00042,0.00079,0.00024,9e-05,0.00014,0.00017,0.00012,0.00014,9e-05,9e-05,0.00016,0.00013,0.0001,0.00021,0.00035,0.0003,2e-05,0.00014,0.00037,0.00037,0.00042,0.00041,0.00041,0.0004,0.00041,0.00064,0.00094,0.00103,0.00064,0.00054,0.00046,0.00068,0.00096,0.00112,0.00114,0.00091,0.0003,3e-05,-1e-05,3e-05,3e-05,7e-05,0.00019,0.0004,0.00024,5e-05,0.00035,0.00044,0.00043,0.00041,0.00027,0.00016,0.00012,6e-05,4e-05,7e-05,4e-05,1e-05,0.00012,0.0001,8e-05,3e-05,0.00011,0.00017,0.00017,0.00022,0.00041,0.0007,0.00079,0.00069,0.00059,0.00021,0.00018,0.00032,0.00042,0.0004,0.00029,0.00024,0.00034,0.0004,0.00051,0.00032,0.00036,0.00043,0.0004,0.00035,0.00038,0.0004,0.00052,0.00056,0.00046,0.0004,0.00055,0.00065,0.00051,0.00045,0.00047,0.00043,0.00033,0.00027,0.00029,0.00034,0.00043,0.00044,0.00039,0.0004,0.00029,0.00032,0.00025,0.00033,0.00065,0.0008,0.00103,0.00096,0.00081,0.00083,0.00074,0.00056,0.00023,0.0002,2e-05,6e-05,0.00012,0.0001,0.00016,0.0002,0.00025,0.00031,0.00026,8e-05,8e-05,2e-05,0.00013,0.00019,0.00017,0.00018,0.00029,0.00022,0.00028,0.00018,0.00014,0.00013,0.00014,0.00013,0.00011,0.00014,0.00024,0.00033,0.00051,0.00023,0.00015,0.00028,0.00033,0.00026,0.00022,0.00014,0.0001,0.00027,0.00149,0.00205,0.00106,0.00042,0.00031,0.00044,0.00078,0.00093,0.00048,8e-05,0.00029,0.00036,0.00012,0.00058,0.00097,-6e-05,-7e-05,-0.00015,-6e-05,2e-05,-0.0004,-4e-05,-5e-05,-0.00018,-3e-05,-4e-05,6e-05,4e-05,5e-05,0.0001,0.00012,0.0001,-0.0,6e-05,0.00014,0.00014,6e-05,5e-05,7e-05,3e-05,3e-05,-3e-05,-2e-05,0.00012,5e-05,-3e-05,-0.00034,-0.00042,-0.00038,-0.00013,-0.0005,-0.00087,-0.00077,-0.00051,-0.00038,-0.00044,-0.00068,-0.00071,-0.00085,0.00792,-0.00124,-0.00093,0.00136,-0.00106,-0.00075,-0.00051,-0.00038,-0.00021,-0.00038,-0.00041,-0.00026,-0.00013,-0.00022,-0.00032,-0.00044,-0.00034,-0.00037,-0.00032,-0.00039,-0.00041,-0.0,0.0005,0.00028,0.00025,8e-05,4e-05,4e-05,0.00011,-0.00013,1e-05,-0.00021,-0.00037,-0.00029,-0.00029,-0.00024,-0.00018,-0.0001,-0.00014,-8e-05,-0.00019,-0.00069,9e-05,-0.00038,-0.00025,-0.00017,-0.00016,-0.00039,-0.00047,-0.00044,-0.00042,-0.00054,-0.00045,-0.00011,-0.00032,-0.00055,-0.00033,-0.00034,-0.00018,-0.00031,-7e-05,0.00078,0.00325,0.00759,0.00623,0.00382,0.00411,0.00293,0.00141,0.00188,0.00337,0.00054,0.00088,0.00117,0.00178,0.00139,0.00132,0.00153,0.0034,0.00565,0.00547,0.00502,0.00567,0.00412,0.00408,0.00392,0.0049,0.00432,0.00407,0.00406,0.0026,0.00188,0.00229,0.0028,0.00698,0.00948,0.0036,0.00649,0.00843,0.0103,0.00644,0.00284,0.00101,9e-05,-0.00021,-0.00109,-0.00137,-0.00145,-0.00227,-0.00283,-0.00401,-0.00545,-0.00618,-0.00693,-0.00651,-0.00413,-0.00277,-0.00513,-0.00541,-0.0066,-0.00537,-0.00462,-0.00577,-0.0091,-0.00979,-0.00741,-0.01139,-0.00994,-0.01023,-0.01671,-0.03581,-0.05335,0.00138,-0.00318,0.06971,0.03829,0.06302,0.01238,-0.03893,-0.01118,0.02592,0.0024,-0.03245,-0.06474,-0.11119,-0.12117,-0.06206,-0.03249,-0.01186,-0.00745,-0.00348,-0.00118,-0.00049,-0.00017,-0.0001,0.0,4e-05,0.00025,0.0006,0.00079,0.0006,0.00047,0.00043,0.0004,-4e-05,4e-05,0.0001,0.00015,0.00031,0.00046,0.00018,9e-05,7e-05,8e-05,9e-05,0.00015,0.00019,0.00021,0.00019,0.00011,0.0001,0.00012,0.00016,3e-05,-0.0,7e-05,0.00014,0.00018,1e-05,0.0,-2e-05,-0.0,-2e-05,0.0,1e-05,6e-05,9e-05,0.00011,6e-05,3e-05,-3e-05,-0.00019,-0.0001,-3e-05,-2e-05,0.0,2e-05,1e-05,1e-05,2e-05,1e-05,-0.00013,-0.00021,-0.00028,-5e-05,0.0,-1e-05,-0.0,1e-05,1e-05,2e-05,3e-05,2e-05,-0.0,-3e-05,-3e-05,-1e-05,1e-05,-9e-05,-0.00017,-0.00015,-0.00017,-0.00017,-0.00022,-0.00029,-0.00035,-0.00047,-0.00073,-0.00098,-0.00073,-0.0007,-0.00075,-0.00084,-0.00081,-0.00059,-0.00066,-0.00053,-0.00036,-0.00032,-0.00028,-0.00015,-0.00013,-0.0001,-0.00011,-9e-05,-9e-05,-7e-05,-8e-05,-8e-05,-0.0001,-0.00013,-0.0001,-0.00011,-0.00013,-9e-05,-6e-05,-7e-05,-5e-05,-2e-05,-3e-05,-1e-05,-2e-05,1e-05,0.00011,0.00031,0.00027,0.00022,8e-05,4e-05,0.0,-1e-05,-3e-05,-7e-05,-7e-05,3e-05,0.00012,0.00016,7e-05,0.00017,0.00029,0.00024,0.00022,0.0001,0.0001,6e-05,5e-05,9e-05,2e-05,1e-05,0.0,1e-05,4e-05,-0.0,-0.0001,-0.00011,-0.0001,-6e-05,2e-05,4e-05,3e-05,8e-05,9e-05,7e-05,6e-05,-4e-05,5e-05,0.00013,0.00014,6e-05,5e-05,0.00014,3e-05,1e-05,-2e-05,-6e-05,-0.00012,-0.00011,-0.00015,-0.00055,-4e-05,-3e-05,-1e-05,-0.0,1e-05,3e-05,6e-05,2e-05,2e-05,0.00033,0.00108,-0.00265,0.00035,0.0003,0.00047,0.00023,0.00011,2e-05,-0.0,-3e-05,-1e-05,1e-05,-2e-05,-5e-05,-0.00017,-9e-05,0.00033,-2e-05,-1e-05,0.0,-1e-05,4e-05,3e-05,9e-05,0.00013,0.0002,0.00033,0.00041,0.00042,0.0006,0.0005,0.00048,1e-05,0.0,0.00024,0.00046,0.0003,0.00014,7e-05,2e-05,2e-05,3e-05,2e-05,3e-05,1e-05,0.0,-3e-05,-4e-05,-3e-05,-3e-05,3e-05,6e-05,0.0002,0.00016,0.00015,0.00024,7e-05,4e-05,4e-05,-4e-05,-1e-05,-1e-05,-0.0,-4e-05,-5e-05,-8e-05,0.0,-3e-05,-1e-05,-4e-05,0.0,-2e-05,-1e-05,-0.0,2e-05,-8e-05,-0.00038,0.00013,4e-05,0.00012,0.0002,0.00018,0.00013,8e-05,8e-05,1e-05,-4e-05,-5e-05,-4e-05,-0.0001,-0.00015,-0.0001,-0.0001,-0.00012,-7e-05,-5e-05,-7e-05,-4e-05,-3e-05,-4e-05,-3e-05,-5e-05,-6e-05,-1e-05,-1e-05,-0.0,-2e-05,-9e-05,-0.00011,-5e-05,-6e-05,-6e-05,-7e-05,-3e-05,-6e-05,-4e-05,0.00016,1e-05,-6e-05,-0.00018,-0.00025,-0.00023,-0.00023,-0.00018,-0.00013,-0.00015,-0.00013,-0.00025,-0.00022,-0.00023,-0.0003,-0.00033,-0.00015,-0.0001,-0.00018,-0.00017,-0.00012,-0.00013,-9e-05,-4e-05,-5e-05,-6e-05,-6e-05,-4e-05,-5e-05,-7e-05,-7e-05,-0.00026,-2e-05,-1e-05,2e-05,1e-05,-5e-05,-7e-05,-1e-05,-4e-05,-7e-05,-0.00011,-0.00011,-0.00013,-2e-05,-5e-05,-7e-05,-8e-05,-0.00011,-9e-05,-7e-05,-6e-05,-9e-05,-0.00012,-0.00015,-0.00016,-0.00013,-0.00013,-7e-05,-7e-05,-0.00012,-0.00012,-8e-05,-6e-05,-0.00015,-0.00011,-5e-05,-2e-05,-4e-05,-4e-05,-4e-05,-9e-05,-0.00011,-0.00012,-0.00018,-7e-05,-8e-05,-0.0001,-0.00011,-8e-05,-0.00011,-0.0001,-0.00011,-0.0001,-8e-05,-8e-05,-6e-05,-8e-05,-5e-05]},"Q61L":{"atac":[-0.00078,-0.00058,-0.00053,-0.0006,-0.00094,-0.00084,-0.00059,-0.00057,-0.0007,-0.00044,-0.00062,-0.00047,-0.00058,-0.00059,-0.00068,-0.00092,-0.00122,-0.00101,-0.00088,-0.00081,-0.00061,-0.00091,-0.00098,-0.00082,-0.00098,-0.00098,-0.00101,-0.00097,-0.0012,-0.00055,3e-05,-0.00028,-0.00059,-0.00035,-0.00018,-7e-05,-0.00013,-0.00084,-0.0007,-0.00094,-0.00074,-0.00088,-0.00089,-0.00103,-0.00101,-0.00087,-0.00107,-0.00094,-0.00058,-0.00023,-0.00034,-0.00029,-0.00042,-0.00055,-0.00101,-0.0009,-0.00097,-0.00121,-0.0009,-0.00071,-0.00058,-0.00055,-0.00044,-0.00054,-0.00048,-0.00037,-0.00034,-0.00039,-0.00064,-0.00038,-0.00035,-0.00038,-0.00036,-0.00034,-0.00042,-0.00036,-0.00049,-0.00066,-0.00061,-0.0006,-0.00066,-0.00051,-0.00047,-0.00062,-0.0005,-0.00055,-0.00054,-0.0007,-0.00056,-0.00052,-0.00039,-0.00023,-0.00062,-0.00059,-0.00044,-0.00078,-0.0007,-0.00115,-0.00081,-0.00085,-0.00106,-0.00393,-0.00105,-0.00103,-0.00086,-0.00073,-0.00068,-0.0006,-0.00073,-0.00091,-0.00089,-0.00101,-0.00123,-0.00092,-0.00082,-0.00085,-0.0007,-0.00065,-0.00073,-0.00067,-0.00055,-0.00065,-0.00071,-0.00098,-0.00032,-0.00068,-0.00066,-0.00069,-0.00167,-0.00151,-0.00146,-0.00192,-0.00143,-0.00202,-0.00078,-0.00078,-0.00059,-0.00065,-0.00046,-0.0003,0.0042,0.00139,-0.00067,-0.00068,-0.00082,-0.00117,-0.00111,-0.00125,-0.00129,-0.00123,-0.00133,-0.00135,-0.00131,-0.00141,-0.00136,-0.00131,-0.00255,-0.00116,-0.00087,-0.00076,-0.0009,-0.00096,-0.00119,-0.00143,-0.00125,-0.00143,-0.00133,-0.00108,-0.00132,-0.00151,-0.00147,-0.00174,-0.00185,-0.0019,-0.00156,-0.0014,-0.00184,-0.00161,-0.00174,-0.00165,-0.00186,-0.00152,-0.00208,-0.00193,-0.00213,-0.00183,-0.00138,-0.0013,-0.00279,-0.0051,-0.00991,-0.0099,-0.01004,-0.01405,-0.01895,-0.04471,-0.04781,-0.02807,-0.04521,-0.04394,-0.02467,-0.0126,-0.01538,-0.00997,-0.00713,-0.00258,-0.00211,-0.00176,-0.00152,-0.00169,-0.00116,-0.00107,-0.00089,-0.00119,-0.00101,-0.0021,-0.00146,0.00102,-0.0013,-0.0013,-0.00057,-0.00046,-0.00086,-0.00112,-0.00135,-0.00126,-0.00121,-0.00028,-0.0,-0.0,-0.00033,-0.0005,-0.00084,-0.00099,-0.0012,-0.00143,-0.00101,-0.00144,-0.00163,-0.0018,-0.0019,-0.00399,-0.00465,-0.00284,-0.00222,-0.0017,-0.00171,-0.001,-0.00089,-0.00118,-0.00156,-0.00234,-0.00235,-0.00277,-0.00266,-0.00268,-0.00211,-0.00266,-0.00229,-0.00303,-0.00286,-0.00328,-0.00269,-0.00178,-0.00146,-0.00128,-0.00084,-0.00047,-0.00148,-0.00152,-0.00121,-0.00179,-0.00204,-0.00151,-0.00082,0.00137,0.00098,0.00184,0.00264,0.00126,0.00096,0.00132,0.00487,0.00632,0.00013,-0.00048,-0.0005,-0.00069,-0.00129,-0.00084,-0.00076,-0.00198,-0.00281,-0.00065,-0.00054,4e-05,0.00155,0.00321,0.00259,0.00084,0.00169,0.0025,0.00479,0.0026,0.00196,0.00299,0.00471,0.00538,0.00559,0.00517,0.00387,0.00139,-0.00102,-0.00085,-0.00089,-0.00089,-0.00074,0.00021,0.00224,0.00491,0.03554,0.05194,0.00633,0.00945,0.02006,0.0051,0.00641,0.00637,0.00804,0.01573,0.01742,0.01914,0.00618,0.00265,0.00239,0.0042,0.0037,0.00112,0.00011,0.00111,0.00226,0.00107,0.00199,0.00219,0.00405,0.00314,0.00297,0.0011,-0.00085,-0.00114,-0.00017,0.00084,-0.00018,3e-05,-9e-05,0.00076,0.0014,-4e-05,-0.00035,-0.00056,-0.00072,-0.00044,7e-05,0.00032,0.00019,0.00068,-0.00045,-0.00061,0.00028,-0.00047,-0.00123,-0.00065,0.0012,0.00147,-0.00015,-0.00011,-0.00027,-0.00015,0.00077,0.00108,0.00266,0.00102,0.00079,-0.00011,0.00061,0.00147,0.0097,0.01308,0.00932,0.00388,0.00122,0.0013,0.00138,0.00153,0.00041,0.00061,-0.00045,-0.00086,-0.00087,5e-05,-0.00085,-0.00127,-0.00107,-0.00103,-0.00122,-0.0012,-0.00162,-0.00118,-0.0002,-0.00054,0.00057,0.0005,0.00127,0.00222,0.00104,-2e-05,-0.00032,-2e-05,-0.00053,-0.00028,-0.00049,-0.00124,-0.00145,0.0,0.0011,0.00131,0.00048,-0.00119,-0.0003,0.00024,-0.00011,0.00043,0.00101,0.00537,0.01449,0.01703,0.00528,0.00555,0.00475,0.00598,0.01026,0.01053,0.01883,0.01079,0.00678,0.00586,-0.00572,-0.0284,-0.03055,-0.00348,0.00048,0.00254,0.0006,-0.00119,-0.00168,-0.0019,-0.0027,-0.00349,-0.00352,-0.00353,-0.00304,-0.00291,-0.00318,-0.0037,-0.00349,-0.00391,-0.00383,-0.00461,-0.00436,-0.00608,-0.0054,-0.00472,-0.00454,-0.00424,-0.00234,-0.0022,-0.00461,-0.00345,-0.00293,-0.00296,-0.00389,-0.00281,-0.00168,-0.00176,-0.00342,-0.00261,-0.00294,-0.0022,-0.00167,-0.00186,-0.00218,-0.00203,-0.00365,-0.00618,-0.0051,-0.00151,-0.00253,-0.00438,-0.0038,-0.00118,-0.00086,-0.0005,-0.00076,-0.00144,0.00028,0.00013,-0.00151,-0.00109,-0.00093,-0.00135,-0.00172,-0.00223,-0.00077,-0.00073,-0.00114,-0.00095,0.00161,0.00781,0.01909,0.00398,0.00293,0.00445,0.00977,0.00176,8e-05,-0.00095,-0.00206,-0.0025,-0.00062,-0.00104,-0.00073,-0.00066,-0.00127,-0.00103,0.00306,-0.00115,-0.00138,-0.00153,-0.00211,-0.00209,-0.00159,-0.00077,-0.00097,-0.00123,-0.00124,-0.00113,-0.00079,-0.00086,-0.00126,-0.00161,-0.00157,-0.00132,-0.00059,-0.00102,-0.00299,-0.00525,-0.00589,-0.02711,-0.01614,-0.0187,-0.02368,-0.01728,-0.001,-0.0015,-0.0016,-0.00133,-0.0016,-0.00246,-0.00109,-0.00118,-0.00075,-0.0015,-0.00248,-0.00186,-0.0019,-0.00113,-0.00111,-0.0013,-0.00182,-0.00205,-0.00225,-0.00091,-0.00084,-0.00049,-0.00052,-0.00048,-0.00056,0.00065,0.00484,0.00142,0.0012,0.00408,0.00109,0.00021,0.00077,-0.00015,-0.00076,-0.0006,-0.00097,-0.0005,-0.00055,-0.00063,-0.00073,-0.00162,-0.00279,-0.00178,-0.00177,-0.00153,-0.00064,-0.00054,-0.00011,-0.00018,-0.00042,-0.00105,-0.00088,-0.00148,-0.00085,-0.00103,-0.00093,-0.00106,-0.00262,-0.00153,0.00165,0.00334,0.00381,-0.02084,-0.05147,-0.0259,-0.0321,-0.0345,-0.02449,-0.04887,-0.0596,-0.08993,-0.04291,-0.03132,-0.02095,-0.01285,-0.00583,-0.00108,0.00422,1e-05,0.00049,-0.00066,-0.00061,0.00026,-0.00073,-0.00068,-0.00103,-0.00045,0.00069,0.00364,0.01462,-0.00722,-0.00235,-0.00544,-0.00239,-3e-05,0.0004,0.00438,0.00769,0.00389,0.00232,0.00039,-0.00057,-0.00096,-0.00085,-0.00086,-0.00099,-0.00144,-0.00118,-0.00107,-0.00101,-0.00097,-0.0008,-0.00085,-0.00102,-0.00086,-0.00095,-0.00193,-0.00184,-0.00206,-0.00175,-0.00137,-0.0011,-0.00135,-0.00157,-0.00118,-0.00125,-0.00121,-0.00089,-0.00102,-0.00116,-0.00093,-0.00077,-0.00048,-0.00071,-0.00107,-0.00092,-0.0008,-0.00075,-0.0009,-0.001,-0.00095,-0.00111,-0.00083,-0.00104,-0.00118,-0.00115,-0.00107,-0.00083,-0.0007,-0.0005,-0.00053,-0.00051,-0.00075,-0.0009,-0.00088,-0.00068,-0.00079,-0.00095,-0.0013,-0.00113,-0.00117,-0.00088,-0.00109,-0.00085,-0.00095,-0.00118,-0.00171,-0.00235,-0.00203,-0.00204,-0.00214,-0.00246,-0.00319,-0.0058,-0.00462,-0.0026,-0.00192,-0.00107,-0.00114,-0.00115,-0.00097,-0.00095,-0.00084,-0.00087,-0.00102,-0.001,-0.00108,-0.00116,-0.00118,-0.00096,-0.00058,-0.00029,4e-05,-0.00049,-0.00058,-0.00056,-0.00048,-0.00059,-0.00071,-0.00103,-0.0012,-0.00127,-0.0009,-0.00072,-0.00084,-0.00075,-0.00085,-0.00081,-0.00074,-0.00076,-0.00112,-0.00109,-0.00138,-0.00118,-0.00031,0.00208,0.01262,0.01633,0.00908,0.00332,0.00053,-0.00014,-0.00093,-0.00123,-0.00087,-0.00047,-0.00049,-0.00044,-0.00058,-0.00078,-0.00055,-0.00026,-0.00037,-0.00041,-0.00064,-0.00108,-0.00105,-0.00114,-0.00083,-0.00069,-0.00058,-0.00041,-0.00066,-0.00116,-0.00146,-0.00133,-0.00091,-0.00075,-0.00073,-0.00062,-0.00023,-0.00074,-0.00082,-0.00114,-0.00148,-0.00215,-0.00221,0.00115,-0.00052,-0.00056,-0.00042,-0.0004,-0.00054,-0.00085,-0.00061,-0.00069,-0.00522,-0.0148,-0.01972,-0.00719,-0.00481,-0.00456,-0.00365,-0.00456,-0.00115,-0.00088,-0.00058,-0.00051,-0.00034,-0.00038,-0.00042,-0.00054,-0.00075,-0.0009,-0.00073,-0.00043,-0.00055,-0.00057,-0.00064,-0.00068,-0.00065,-0.00081,-0.00071,-0.00081,-0.00082,-0.00086,-0.00064,-0.00088,-0.00305,-0.00096,-0.00074,-7e-05,-0.00053,-0.00333,-0.00054,-0.00073,-0.0005,-0.00078,-0.0011,-0.0011,-0.00078,-0.00054,-0.00081,-0.00108,-0.00122,-0.00143,-0.00439,-0.0035,-0.00267,-0.00221,-0.0031,-0.00282,-0.0028,-0.00281,-0.00256,-0.00137,-0.00403,-0.00181,-0.00096,-0.00088,-0.00092,-0.00089,-0.00098],"h3k27":[0.00018,0.00015,9e-05,0.0001,0.00012,0.00014,0.00011,0.00013,9e-05,6e-05,7e-05,7e-05,9e-05,0.0001,0.00012,0.00013,0.0002,0.00013,0.00015,0.00015,0.00014,0.00015,0.00015,0.00016,0.00015,0.00014,0.00021,0.00025,0.00023,2e-05,4e-05,8e-05,0.00027,0.00016,8e-05,5e-05,3e-05,7e-05,0.0003,0.00021,0.00023,0.00035,0.00028,0.00025,0.00017,0.00013,0.00013,0.00013,6e-05,0.00011,7e-05,9e-05,7e-05,7e-05,8e-05,0.0001,0.00011,9e-05,7e-05,8e-05,6e-05,0.00011,0.00015,6e-05,4e-05,6e-05,5e-05,7e-05,6e-05,0.00013,6e-05,-0.0,-1e-05,2e-05,3e-05,7e-05,7e-05,0.00013,0.00013,0.00015,0.00017,0.00019,0.00016,0.00013,0.0001,0.0001,0.00013,0.00017,0.00022,0.00017,0.00018,0.00016,0.00012,0.0001,0.00013,0.0001,0.00013,0.00033,0.00014,0.00042,0.00032,-0.00172,0.00042,0.00043,0.00039,0.0002,0.00018,0.0002,0.00022,0.00023,0.00025,0.00029,0.00035,0.00033,0.0004,0.00045,0.00041,0.00055,0.00047,0.00033,0.00023,0.00029,0.00035,0.00038,0.00025,0.0003,0.0003,0.0004,0.00093,0.00184,0.00219,0.00212,0.00432,0.00485,0.00322,0.00247,0.00179,0.00108,0.00073,0.00073,0.00059,0.00049,0.0003,0.0002,0.00023,0.0003,0.00048,0.00092,0.00073,4e-05,-4e-05,-0.00034,-0.00021,0.00028,0.00047,0.0003,-0.00146,0.00022,0.00018,0.00017,6e-05,0.00025,0.00028,0.00047,0.00079,0.00074,0.00049,0.00029,0.0003,0.00035,0.00032,0.00029,0.0003,0.00032,0.00045,0.00062,0.00051,0.00022,0.00026,0.00068,0.00082,0.00066,0.00114,0.00165,0.00125,0.001,0.00076,0.00065,0.00143,0.00213,-0.0031,0.00163,0.00275,0.00913,0.01542,0.01745,0.00032,-0.02014,-0.0074,0.00236,-0.00215,0.00374,0.00091,-0.00244,-0.00015,0.0024,0.00359,0.0044,0.00417,0.00363,0.00263,0.00174,0.00167,0.00137,0.0015,0.00162,0.0017,0.0014,0.00193,0.00282,0.00322,0.00332,0.00198,0.00159,0.00163,0.00283,0.00275,0.00052,2e-05,1e-05,0.00042,0.00029,0.00172,0.00175,0.00167,0.00153,0.00129,0.00164,0.00179,0.00178,0.00238,0.00259,0.00331,0.00224,0.00197,0.00183,0.00108,0.00075,0.00095,0.00034,0.00031,0.00027,0.00015,0.00081,0.00036,-6e-05,-0.00033,-0.00039,-0.00019,-0.0001,0.00065,-0.00019,-5e-05,-2e-05,-0.00011,-0.00036,-0.00123,-0.00219,-0.00089,-0.00051,-0.00033,-0.00026,-0.00026,-0.00048,-0.00174,-0.0062,-0.00918,-0.01028,-0.01031,-0.00431,-0.00242,-0.00183,-0.0019,-0.00197,-0.00186,-0.00271,-0.00298,-0.00189,-0.00162,-0.00368,-0.00367,-0.00249,-0.00157,-0.00345,-0.00356,-0.00359,-0.00334,-0.00276,-0.00289,-0.0032,-0.00402,-0.00623,-0.00856,-0.0059,-0.00364,-0.00384,-0.0054,-0.01058,-0.01378,-0.01233,-0.00985,-0.0058,-0.00017,-0.00046,-0.00098,-0.00047,-0.00032,0.00062,0.00072,0.00076,-0.00011,0.0003,0.00229,0.00364,0.0038,0.00307,0.00271,0.00213,0.00131,0.00135,0.00195,0.0021,0.00101,0.00092,0.00089,0.00074,0.00075,0.0001,-0.00025,-8e-05,-0.00025,-0.00047,-0.00048,-0.00061,-0.00038,-0.00087,-0.00122,-0.00094,-0.00166,-0.00145,-0.00121,-0.00013,0.00022,-0.00038,-0.00049,-0.00041,0.0001,-0.00021,-0.00062,-0.00104,-0.00068,-0.0013,-0.00207,-0.00172,-0.00143,-0.00129,-0.00089,-0.00171,-0.0027,-0.00232,-0.00237,-0.00249,-0.00397,-0.00348,-0.0021,-0.00139,-0.0012,-0.00176,-0.00287,-0.00252,-0.00215,-0.00152,-0.00168,-0.00161,-0.00199,-0.001,-0.00136,-0.00224,-0.00217,-0.00093,-0.0011,-0.00229,-0.00239,-0.00161,-0.00172,-0.0015,-0.00211,-0.00149,-0.0013,-0.00029,-0.00103,-0.00191,-0.00165,-0.0012,-0.00122,-0.00111,-0.00095,-0.00038,-0.00048,-0.00064,-0.00058,-0.0013,-0.0018,-0.00263,-0.00199,-0.00089,-0.00094,-0.00168,-0.00201,-0.00124,-0.00146,-0.00144,-0.00061,-0.00014,0.00149,0.00119,0.00157,0.0023,0.00169,0.00194,0.00224,0.00218,0.00168,0.00304,-0.00391,-0.00534,0.00677,0.00732,0.0075,0.00894,0.01728,0.01504,0.02118,0.01572,0.01111,0.01235,0.00713,-0.01231,0.00038,0.01018,0.00428,0.00303,0.00085,-0.00028,-0.00161,-0.00094,-0.00184,-0.00258,-0.00243,-0.00193,-0.00167,-0.00171,-0.00141,-0.0026,-0.00322,-0.0028,-0.00228,-0.00185,-0.0019,-0.0029,-0.00163,-0.00158,-0.00201,-0.00187,-0.00163,-0.0014,-0.0014,-0.00112,-0.00158,-0.00191,-0.00243,-0.00235,-0.00168,-0.00126,-0.00308,-0.00295,-0.00314,-0.00185,-0.00173,-0.00212,-0.00232,-0.00207,-0.00242,-0.00329,-0.00387,7e-05,-0.00102,-0.00163,-0.00101,-0.00025,-0.00043,-0.00041,-0.00114,-0.00119,-0.00101,-0.00131,-0.00115,-0.00072,-0.00061,-0.00019,-8e-05,0.00036,0.00171,0.00333,0.00474,0.01119,0.01553,0.00846,0.00897,0.01343,0.01326,0.00958,0.00787,0.00555,0.00533,0.00425,0.00261,0.00396,0.00347,0.00279,0.00241,0.00212,0.00204,0.00158,0.00558,0.00088,0.00075,0.00092,0.00087,0.00116,0.00073,0.00097,0.00115,0.00123,0.00106,0.00036,0.00038,0.00066,0.0009,0.00132,0.00143,0.00172,0.00156,0.0016,0.00164,0.0006,-8e-05,-0.00095,-0.00268,-0.00647,-0.00765,-0.00557,-0.00029,-0.00039,-0.00096,-0.00148,-0.00122,-0.00136,-0.00177,-0.00137,-0.00225,-0.00256,-0.0016,-0.00201,-0.00234,-0.0022,-0.00333,-0.00369,-0.00478,-0.0029,-0.00136,-0.00158,-0.0006,-0.00012,9e-05,-0.0002,-0.00062,-0.00094,-0.00962,-0.00214,-0.0005,-0.00041,-2e-05,0.0004,0.00056,0.00024,-3e-05,0.00042,0.00056,0.00057,0.00054,0.00044,0.00055,0.00036,-0.0006,-0.00084,-5e-05,0.00116,0.00094,0.00119,0.00148,0.00166,0.00196,0.00257,0.00333,0.00285,0.00273,0.00284,0.00297,0.00237,0.00234,0.0079,0.01371,0.02042,0.02497,0.02511,0.03879,0.03045,0.03151,-0.02275,-0.01682,-0.10778,-0.04449,-0.02153,0.02145,0.05041,0.04354,0.04177,0.03121,0.02267,0.02243,0.01612,0.01042,0.00505,0.00464,0.00669,0.00558,0.00436,0.00355,0.00203,0.00239,0.00228,0.0013,0.0014,0.00282,0.0041,0.00464,0.0053,0.00588,0.00567,0.00424,0.00503,0.00567,0.00401,0.00345,0.00404,0.00327,0.00312,0.00353,0.00379,0.00347,0.00335,0.00243,0.00203,0.00279,0.00175,0.00242,0.0037,0.00308,0.00254,0.00415,0.0042,0.00356,0.00354,0.00382,0.00285,0.00214,0.0031,0.0037,0.00208,0.00117,0.00146,0.00076,0.00043,0.00043,0.00028,0.00039,0.00056,0.00043,0.0003,0.00035,0.00029,0.00025,0.0003,0.00011,-0.00031,0.00022,0.00028,0.00036,0.00024,0.0002,0.00015,0.00012,0.00012,0.00017,0.00019,0.00026,0.00029,0.00025,0.00017,0.00032,0.00066,0.00102,0.00111,0.00118,0.00115,0.00108,0.00122,0.00101,0.0014,0.00144,0.00119,0.00118,0.00138,0.00151,0.00211,0.002,0.00176,0.00156,0.00134,0.00127,0.00158,0.00135,0.00112,0.00093,0.00083,0.00078,0.00084,0.00075,0.00073,0.00045,0.00022,0.00014,0.00017,0.00034,5e-05,2e-05,0.00015,0.00011,0.00019,0.00026,0.00016,0.00028,0.00017,0.00045,0.00037,0.00041,0.00071,0.00087,0.00092,0.00134,0.00101,0.00071,0.0007,0.00062,0.00054,0.00068,0.0011,0.0012,0.00146,0.00122,0.00115,0.00135,0.00118,0.00101,0.00064,0.00049,0.00035,1e-05,0.00012,0.00014,0.00026,0.00059,0.00094,0.00128,0.00113,0.00035,0.00078,0.0007,0.00088,0.00088,0.00066,0.00036,0.00019,0.0003,0.00023,0.00041,0.00072,0.00098,0.00117,0.00079,0.00062,0.00025,4e-05,-0.00019,-0.00017,0.00011,-9e-05,-0.00018,-0.00031,0.00115,6e-05,-3e-05,-1e-05,0.0002,0.00052,0.00086,0.00107,-0.00034,-0.001,-0.00055,0.0006,0.00053,-0.00275,-0.00134,-0.00075,0.00063,0.00043,0.00028,0.00024,-0.00035,-4e-05,5e-05,4e-05,7e-05,4e-05,4e-05,6e-05,0.00023,0.00011,9e-05,0.00016,0.00021,0.00032,0.00096,0.00102,0.00104,0.00141,0.00203,0.00201,0.00252,0.00104,0.00082,0.00082,0.00028,0.00041,0.00102,0.00097,0.00067,0.00024,0.00017,0.00037,4e-05,6e-05,0.00011,-0.00012,-0.00065,-0.00089,-0.00067,-0.00101,-0.00144,-0.00171,-0.00179,-0.00256,-0.00363,-0.00251,-0.00254,-0.00374,-0.00191,-0.00107,-0.00077,-0.00083,-0.00092,-0.00059,0.0,0.00014],"h3k4":[5e-05,3e-05,1e-05,3e-05,5e-05,7e-05,3e-05,7e-05,3e-05,0.0,1e-05,2e-05,4e-05,5e-05,8e-05,0.00011,0.0002,0.00012,0.00012,0.00013,0.00013,0.00016,0.00012,0.00011,7e-05,7e-05,0.00013,0.00017,0.00013,-5e-05,1e-05,7e-05,0.00019,0.00011,8e-05,5e-05,4e-05,1e-05,0.00014,0.00014,5e-05,9e-05,8e-05,6e-05,8e-05,7e-05,5e-05,8e-05,6e-05,0.00011,0.0001,8e-05,9e-05,8e-05,7e-05,8e-05,0.00014,0.00012,0.0001,0.00011,0.00016,0.00025,0.00034,0.00025,0.00024,0.0003,0.00031,0.00034,0.00053,0.00053,0.00031,0.00031,0.00034,0.0003,0.00032,0.00027,0.0003,0.00037,0.00032,0.00026,0.0002,0.00019,0.00017,0.00011,5e-05,5e-05,6e-05,0.00011,0.00013,9e-05,5e-05,4e-05,3e-05,3e-05,2e-05,1e-05,0.0,5e-05,-4e-05,6e-05,-7e-05,-0.0019,4e-05,9e-05,9e-05,6e-05,4e-05,9e-05,9e-05,8e-05,9e-05,0.0001,0.00011,0.0001,0.00015,0.00013,7e-05,0.00013,0.00015,0.0001,6e-05,7e-05,8e-05,7e-05,0.00014,8e-05,8e-05,0.0001,0.00011,0.0003,0.0009,0.00136,0.00313,0.00349,0.00281,0.00156,0.00062,0.00037,0.00023,0.00014,0.00015,7e-05,0.00016,0.00018,0.00016,0.00017,0.00029,0.0005,0.00037,0.00025,0.00025,0.00018,0.0002,0.00031,0.00032,0.00021,-0.00134,0.00011,8e-05,7e-05,4e-05,0.0001,0.00011,9e-05,0.00017,0.00017,0.0001,7e-05,7e-05,8e-05,9e-05,6e-05,6e-05,7e-05,6e-05,0.00014,0.0001,5e-05,7e-05,0.00018,0.0002,0.00017,0.00026,0.00039,0.00033,0.00033,0.00017,3e-05,0.0004,0.0013,-0.00371,-0.00119,-0.00074,-0.00151,0.00263,0.00377,-0.00183,-0.01359,0.00413,0.00363,0.00093,0.00228,-0.00464,-0.00996,-0.00193,0.00187,0.00246,0.00314,0.00323,0.00259,0.00165,0.00095,0.00095,0.00079,0.00077,0.00076,0.00085,0.00076,0.00088,0.0011,0.0012,0.0012,0.00075,0.0006,0.00065,0.00102,0.00083,0.00021,-0.0,-1e-05,0.00022,7e-05,0.00054,0.00047,0.0005,0.00046,0.00041,0.00047,0.00048,0.00049,0.00071,0.00072,0.00082,0.00065,0.00072,0.00071,0.00045,0.0004,0.00039,0.00016,0.00019,0.00031,0.00051,0.00054,0.00038,0.0003,0.00029,0.00034,0.00039,0.00041,0.00054,0.00053,0.00052,0.00048,0.00034,0.00015,-0.00044,-0.00094,-3e-05,0.00018,0.00031,0.00041,0.00043,0.00036,-0.0005,-0.00409,-0.00579,-0.00623,-0.00564,-0.0017,-0.00049,-0.00038,-0.00014,-0.00013,-0.00011,-0.00026,-0.00051,-0.00039,-0.00015,-0.00073,-0.00079,-0.0003,0.00016,-0.0013,-0.00065,-0.00052,-0.00052,-0.00031,-0.00085,-0.00128,-0.00201,-0.00301,-0.00344,-0.00268,-0.00171,-0.00191,-0.00312,-0.00661,-0.00884,-0.00783,-0.00706,-0.00423,0.00046,0.00062,0.00068,0.00065,0.00061,0.00113,0.00162,0.00174,0.0013,0.00134,0.00186,0.00231,0.00254,0.00246,0.00241,0.00227,0.00189,0.00192,0.00206,0.00177,0.00071,0.00091,0.00149,0.0017,0.00114,0.00075,0.00093,0.00112,0.0011,0.00105,0.0016,0.0023,0.00277,0.00246,0.0017,0.00073,0.00076,0.00138,0.00174,0.00144,0.00044,0.00076,0.00124,0.00137,0.00137,0.00105,0.00118,0.00118,0.0012,0.00124,0.00139,0.00153,0.00151,0.00142,0.00095,0.00103,0.00139,0.00109,0.00032,0.00064,0.00121,0.00108,0.00057,0.00054,0.0005,0.00075,0.00089,0.00091,0.00097,0.00073,0.0004,0.00054,0.0006,0.0012,0.00192,0.00241,0.00238,0.00192,0.00163,0.00203,0.00181,0.00114,0.0006,0.00062,0.0006,0.00074,0.0005,0.00092,0.00106,0.00121,0.00138,0.0012,0.00106,0.00072,0.00033,7e-05,0.00069,0.00076,0.00079,0.00073,0.00107,0.00109,0.00117,0.00078,0.00056,0.00059,0.00051,0.00061,0.00061,0.00077,0.00107,0.00078,0.00135,0.00085,0.001,0.00182,0.00171,0.00144,0.00126,0.00054,0.0005,0.00073,-0.00691,-0.01004,0.00158,0.00226,0.00218,0.00342,0.00676,0.00637,0.01293,0.00891,0.00425,0.00439,0.00182,-0.00656,0.00092,0.00627,0.0039,0.00419,0.00335,0.00252,0.00106,0.00232,0.00212,0.00253,0.00207,0.00167,0.00117,0.00119,0.00114,0.00116,0.00109,0.00105,0.00079,0.00054,0.00082,0.00063,0.00072,0.0006,0.00057,0.0006,0.00055,0.00063,0.00073,0.00073,0.00069,0.00074,0.00067,0.00044,0.00043,0.00049,0.00024,0.00027,0.0004,0.00039,0.00032,-0.00016,5e-05,0.00032,0.00026,0.00052,0.00025,0.0017,0.00022,0.00026,0.00041,0.00034,0.00021,0.00016,0.00024,0.00035,0.00048,0.00044,0.00034,0.00035,0.00059,0.00069,0.00092,0.00098,0.00118,0.0014,0.00174,0.00327,0.0045,0.0037,0.00382,0.00518,0.00413,0.00275,0.00231,0.0016,0.00127,0.00115,0.00094,0.00113,0.00088,0.00073,0.00077,0.00069,0.00063,0.00075,0.00421,0.00073,0.0007,0.0006,0.00066,0.00066,0.00035,0.00042,0.00053,0.00066,0.00065,0.00031,0.00025,0.00045,0.00054,0.00055,0.00041,0.00043,0.00035,0.0003,-7e-05,-0.00044,-0.00035,-0.00063,-0.00104,-0.00242,-0.00241,-0.00109,0.00022,0.00015,-9e-05,-0.0003,-0.0003,-0.00041,-0.00041,-0.00049,-0.00052,-0.00054,-0.00037,-6e-05,7e-05,6e-05,-0.00034,-0.00058,-0.00049,-0.00019,-0.00018,0.00013,0.00023,0.00032,0.00029,0.00032,5e-05,-0.00068,-0.00747,-0.00182,-0.0003,0.00015,0.00034,0.00065,0.00073,0.00052,0.00034,0.00035,0.00048,0.0002,0.00022,8e-05,0.0001,-0.00019,-0.00106,-0.00085,-0.00087,-0.00052,-0.00041,-0.00044,-0.00035,0.00011,-0.00107,-0.00169,-0.00304,-0.00537,-0.0042,-0.00471,-0.00603,-0.00625,-0.00839,-0.00583,0.00027,-0.00771,0.00257,-0.00467,0.00767,0.00305,0.02215,-0.03969,-0.03806,-0.16604,-0.05451,-0.04173,-0.02242,-0.01426,-0.01193,-0.04291,-0.02663,-0.01422,-0.00558,-0.00054,0.00202,0.00081,0.00049,0.00049,0.00039,0.00042,0.00046,0.00019,0.00014,0.00032,-0.00013,0.00059,0.0002,0.00015,0.00037,0.00055,0.00051,0.00044,0.00036,0.00052,0.00047,0.00033,0.00023,0.00021,0.00021,0.00028,0.00026,0.00011,0.00014,0.00023,0.00027,0.00031,0.00038,0.00021,0.00015,0.00033,0.00033,0.00038,0.00041,0.00042,0.0003,0.0004,0.00042,0.00024,0.00023,0.00046,0.00057,0.0003,0.00016,4e-05,-1e-05,-3e-05,2e-05,3e-05,1e-05,-0.0,0.0,1e-05,2e-05,-2e-05,-3e-05,-3e-05,-0.00018,-0.00047,-2e-05,5e-05,8e-05,5e-05,6e-05,8e-05,9e-05,8e-05,0.00011,0.0002,0.00031,0.00034,0.00018,7e-05,8e-05,0.00012,0.00016,0.0002,0.00029,0.00025,0.00032,0.00043,0.00042,0.00056,0.00054,0.00052,0.00044,0.00056,0.00058,0.00068,0.00059,0.00051,0.0004,0.0003,0.00024,0.00029,0.00025,0.00022,0.00016,0.0001,8e-05,4e-05,2e-05,0.0,-4e-05,-5e-05,-3e-05,-2e-05,3e-05,-1e-05,2e-05,5e-05,5e-05,0.0001,9e-05,8e-05,9e-05,0.0001,0.0001,7e-05,0.0001,0.00015,7e-05,0.00012,0.00019,0.00016,5e-05,2e-05,5e-05,2e-05,3e-05,0.0001,0.00015,0.00024,0.00016,0.00029,0.00032,0.00029,0.00024,9e-05,7e-05,5e-05,-0.00011,5e-05,6e-05,7e-05,4e-05,4e-05,9e-05,9e-05,-4e-05,4e-05,4e-05,5e-05,5e-05,5e-05,6e-05,8e-05,0.00013,0.00018,0.0002,0.00025,0.00037,0.00036,0.0002,0.00014,0.00011,9e-05,3e-05,-0.0,-5e-05,-0.00013,-0.00013,-0.00011,0.0008,9e-05,4e-05,6e-05,0.00013,0.0002,0.00025,0.00029,0.00016,5e-05,0.00014,0.00055,0.00052,-0.0004,0.00016,0.00024,0.0004,0.00027,0.0002,9e-05,2e-05,-1e-05,5e-05,5e-05,4e-05,0.0,-0.0,9e-05,0.00022,3e-05,3e-05,5e-05,3e-05,5e-05,5e-05,1e-05,2e-05,7e-05,3e-05,2e-05,8e-05,8e-05,0.00012,0.0,-2e-05,-4e-05,-2e-05,3e-05,-1e-05,-5e-05,-5e-05,-6e-05,-0.0001,-3e-05,1e-05,-5e-05,-0.0001,-0.00012,-0.0001,-0.00017,-0.00023,-0.0002,-0.00023,-0.00051,-0.00092,-0.0007,-0.00071,-0.0009,-0.00044,-0.00025,-0.00022,-0.00024,-0.00021,-0.00016,-9e-05,-8e-05]}};
+
+const bins = Array.from({length:896},(_,i)=>i);
+const trackInfo = {
+  atac: {label:'ATAC-seq Change (ALT - REF)', g12cColor:'rgba(224,90,90,0.7)', q61lColor:'rgba(224,90,90,0.7)'},
+  h3k27: {label:'H3K27ac Change (ALT - REF)', g12cColor:'rgba(90,138,224,0.7)', q61lColor:'rgba(90,138,224,0.7)'},
+  h3k4: {label:'H3K4me3 Change (ALT - REF)', g12cColor:'rgba(90,186,110,0.7)', q61lColor:'rgba(90,186,110,0.7)'},
+};
+
+let bCharts = {};
+let curBtrack = 'atac';
+
+function setBtrack(t, el) {
+  curBtrack = t;
+  el.parentElement.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
+  el.classList.add('on');
+  updateBcharts();
+}
+
+function updateBcharts() {
+  const t = curBtrack;
+  const info = trackInfo[t];
+  const g12cData = BDATA.G12C[t];
+  const q61lData = BDATA.Q61L[t];
+
+  if (bCharts.g12c) bCharts.g12c.destroy();
+  if (bCharts.q61l) bCharts.q61l.destroy();
+
+  const commonOpts = (title, color) => ({
+    type: 'bar',
+    data: {
+      labels: bins,
+      datasets: [{
+        data: g12cData,
+        backgroundColor: color,
+        borderWidth: 0,
+        barPercentage: 1.0,
+        categoryPercentage: 1.0,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {legend:{display:false}, tooltip:{callbacks:{label:c=>` ${c.raw.toFixed(5)}`}}},
+      scales: {
+        x: {display:false},
+        y: {ticks:{font:{size:10}}, grid:{color:'rgba(0,0,0,0.04)'},
+            title:{display:true, text:info.label, font:{size:10}}}
+      }
+    }
+  });
+
+  const g12cOpts = commonOpts(`KRAS G12C — ${info.label}`, info.g12cColor);
+  g12cOpts.data.datasets[0].data = g12cData;
+  g12cOpts.options.plugins = {
+    legend:{display:false},
+    title:{display:true, text:'KRAS G12C (chr12:25245351 C>A) — 59명, 표적치료제 있음', font:{size:11}},
+    tooltip:{callbacks:{label:c=>` ${c.raw.toFixed(5)}`}}
+  };
+  bCharts.g12c = new Chart(document.getElementById('b-g12c'), g12cOpts);
+
+  const q61lOpts = JSON.parse(JSON.stringify(g12cOpts));
+  q61lOpts.data.datasets[0].data = q61lData;
+  q61lOpts.options.plugins.title.text = 'KRAS Q61L (chr12:25227343 T>A) — 2명, 발암성 강함';
+  bCharts.q61l = new Chart(document.getElementById('b-q61l'), q61lOpts);
+}
+
+function switchBsec(id, el) {
+  document.querySelectorAll('#planB .stab').forEach(t => t.classList.remove('on'));
+  el.classList.add('on');
+  document.querySelectorAll('#planB .subsec').forEach(s => s.classList.remove('on'));
+  document.getElementById('bsec-' + id).classList.add('on');
+  initBsec(id);
+}
+let binited = {};
+function initBsec(id) {
+  if (binited[id]) return;
+  binited[id] = true;
+  if (id === 'kras') updateBcharts();
+  else if (id === 'top5') initTop5();
+  else if (id === 'range') initRange();
+  else if (id === 'corr') initCorr();
+}
+function initPlanB() {
+  if (inited['planB']) return;
+  inited['planB'] = true;
+  updateBcharts();
+}
+
+const D_TOP5=[{id:'MSH2_R389*',atac:0.1512,h3k27:0.1371,h3k4:0.0751,total:0.3634},{id:'TP53_C277F',atac:0.0617,h3k27:0.0430,h3k4:0.0913,total:0.1959},{id:'PTPRS_V1621L',atac:0.0735,h3k27:0.0235,h3k4:0.0288,total:0.1258},{id:'EPHA5_V581A',atac:0.0455,h3k27:0.0020,h3k4:0.0721,total:0.1195},{id:'PRDM1_Q569H',atac:0.0191,h3k27:0.0101,h3k4:0.0446,total:0.0738},{id:'KRAS_Q61L',atac:0.0402,h3k27:0.0126,h3k4:0.0178,total:0.0706},{id:'UPF1_R800L',atac:0.0067,h3k27:0.0057,h3k4:0.0269,total:0.0394},{id:'ERCC5_A1143T',atac:0.0021,h3k27:0.0159,h3k4:0.0135,total:0.0315},{id:'FUBP1_A526T',atac:0.0018,h3k27:0.0156,h3k4:0.0103,total:0.0277},{id:'HGF_C271Y',atac:0.0027,h3k27:0.0118,h3k4:0.0041,total:0.0186},{id:'EPHA3_T406S',atac:0,h3k27:0,h3k4:0,total:0},{id:'NOTCH3_E472Q',atac:0,h3k27:0,h3k4:0,total:0},{id:'MGA_D337N',atac:0,h3k27:0,h3k4:0,total:0}];
+
+function initTop5(){
+  new Chart(document.getElementById('top5-bar'),{type:'bar',data:{labels:D_TOP5.map(d=>d.id),datasets:[{label:'ATAC-seq',data:D_TOP5.map(d=>d.atac),backgroundColor:'#e74c3c',borderRadius:2},{label:'H3K27ac',data:D_TOP5.map(d=>d.h3k27),backgroundColor:'#3498db',borderRadius:2},{label:'H3K4me3',data:D_TOP5.map(d=>d.h3k4),backgroundColor:'#2ecc71',borderRadius:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:10},boxWidth:10}}},scales:{x:{ticks:{font:{size:9},maxRotation:40},grid:{display:false}},y:{ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'}}}}});
+  const top5=D_TOP5.slice(0,5);const maxT=top5[0].total;
+  document.getElementById('top5-list').innerHTML=top5.map((d,i)=>{const pct=(d.total/maxT*100).toFixed(0);const c=i===0?'#A32D2D':i<2?'#993C1D':'#185FA5';return `<div class="trow"><span class="tnum">${i+1}</span><span class="tnm">${d.id}</span><div class="bw"><div class="bf" style="width:${pct}%;background:${c}"></div></div><span class="tv" style="color:${c}">${d.total.toFixed(4)}</span></div>`;}).join('');
+  new Chart(document.getElementById('top5-track'),{type:'bar',data:{labels:['ATAC-seq','H3K27ac','H3K4me3'],datasets:[{data:[0.0311,0.0213,0.0296],backgroundColor:['#e74c3c','#3498db','#2ecc71'],borderRadius:4,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:11}},grid:{display:false}},y:{ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'}}}}}); 
+}
+
+const D_RANGE=[{id:'TP53_C277F',atac:33,h3k27:29,h3k4:73},{id:'MSH2_R389*',atac:39,h3k27:23,h3k4:47},{id:'PRDM1_Q569H',atac:34,h3k27:5,h3k4:49},{id:'PTPRS_V1621L',atac:6,h3k27:30,h3k4:7},{id:'KRAS_Q61L',atac:6,h3k27:1,h3k4:11},{id:'ERCC5_A1143T',atac:3,h3k27:2,h3k4:3},{id:'FUBP1_A526T',atac:2,h3k27:1,h3k4:4},{id:'UPF1_R800L',atac:1,h3k27:4,h3k4:2},{id:'EPHA5_V581A',atac:1,h3k27:2,h3k4:4},{id:'HGF_C271Y',atac:1,h3k27:1,h3k4:2},{id:'EPHA3_T406S',atac:0,h3k27:0,h3k4:0},{id:'NOTCH3_E472Q',atac:0,h3k27:0,h3k4:0},{id:'MGA_D337N',atac:0,h3k27:0,h3k4:0}];
+function initRange(){
+  // 1. 영향 범위 가로 막대
+  new Chart(document.getElementById('range-bar'),{type:'bar',data:{labels:D_RANGE.map(d=>d.id),datasets:[{label:'ATAC-seq',data:D_RANGE.map(d=>d.atac),backgroundColor:'#e74c3c',borderRadius:2},{label:'H3K27ac',data:D_RANGE.map(d=>d.h3k27),backgroundColor:'#3498db',borderRadius:2},{label:'H3K4me3',data:D_RANGE.map(d=>d.h3k4),backgroundColor:'#2ecc71',borderRadius:2}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:10},boxWidth:10}},tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${c.raw} bins (${(c.raw*0.128).toFixed(2)} kb)`}}},scales:{x:{ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'},title:{display:true,text:'Affected Bins (|change|>0.01)',font:{size:10}}},y:{ticks:{font:{size:9}},grid:{display:false}}}}});
+
+  // 2. Threshold Sensitivity — threshold별 평균 Affected Bins
+  const threshLabels = ['0.005','0.01','0.02','0.05'];
+  const threshData = {
+    atac:   [20.5, 9.7, 3.5, 1.3],
+    h3k27:  [18.2, 7.5, 3.2, 0.8],
+    h3k4:   [28.8, 15.5, 7.8, 1.1]
+  };
+  const makeThreshOpts = (color) => ({
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{display:false}, tooltip:{callbacks:{label:c=>` 평균 ${c.raw} bins (${(c.raw*0.128).toFixed(2)} kb)`}}},
+    scales:{
+      x:{ticks:{font:{size:10}}, grid:{display:false}},
+      y:{ticks:{font:{size:9}}, grid:{color:'rgba(0,0,0,0.04)'}, title:{display:true,text:'Avg Affected Bins',font:{size:9}}}
+    }
+  });
+  [['thresh-atac','atac','#e74c3c'],['thresh-h3k27','h3k27','#3498db'],['thresh-h3k4','h3k4','#2ecc71']].forEach(([id,key,color])=>{
+    new Chart(document.getElementById(id),{
+      type:'bar',
+      data:{labels:threshLabels, datasets:[{data:threshData[key], backgroundColor:threshLabels.map((_,i)=>i===1?color:color+'55'), borderRadius:4, borderSkipped:false}]},
+      options: makeThreshOpts(color)
+    });
+  });
+
+  // 3. Range vs. Magnitude 산점도
+  // [atac_bins, atac_max, h3k27_bins, h3k27_max, h3k4_bins, h3k4_max, label]
+  const rvmData = [
+    {label:'MSH2_R389*',  ab:39, am:0.1512, hb:23,  hm:0.1371, kb:47,  km:0.0751},
+    {label:'TP53_C277F',  ab:33, am:0.0617, hb:29,  hm:0.0430, kb:73,  km:0.0913},
+    {label:'PTPRS_V1621L',ab:6,  am:0.0735, hb:30,  hm:0.0235, kb:7,   km:0.0288},
+    {label:'EPHA5_V581A', ab:1,  am:0.0455, hb:2,   hm:0.0020, kb:4,   km:0.0721},
+    {label:'PRDM1_Q569H', ab:34, am:0.0191, hb:5,   hm:0.0101, kb:49,  km:0.0446},
+    {label:'KRAS_Q61L',   ab:6,  am:0.0402, hb:1,   hm:0.0126, kb:11,  km:0.0178},
+    {label:'UPF1_R800L',  ab:1,  am:0.0067, hb:4,   hm:0.0057, kb:2,   km:0.0269},
+    {label:'ERCC5_A1143T',ab:3,  am:0.0021, hb:2,   hm:0.0159, kb:3,   km:0.0135},
+    {label:'FUBP1_A526T', ab:2,  am:0.0018, hb:1,   hm:0.0156, kb:4,   km:0.0103},
+    {label:'HGF_C271Y',   ab:1,  am:0.0027, hb:1,   hm:0.0118, kb:2,   km:0.0041},
+    {label:'EPHA3_T406S', ab:0,  am:0,      hb:0,   hm:0,      kb:0,   km:0},
+    {label:'NOTCH3_E472Q',ab:0,  am:0,      hb:0,   hm:0,      kb:0,   km:0},
+    {label:'MGA_D337N',   ab:0,  am:0,      hb:0,   hm:0,      kb:0,   km:0},
+  ];
+  const makeScatterOpts = (color, xtitle, ytitle) => ({
+    responsive:true, maintainAspectRatio:false,
+    plugins:{
+      legend:{display:false},
+      tooltip:{callbacks:{label:c=>[c.raw.label, `Range: ${c.raw.x} bins`, `Max: ${c.raw.y.toFixed(4)}`]}}
+    },
+    scales:{
+      x:{ticks:{font:{size:9}}, grid:{color:'rgba(0,0,0,0.04)'}, title:{display:true, text:'Affected Bins (threshold=0.01)', font:{size:9}}},
+      y:{ticks:{font:{size:9}}, grid:{color:'rgba(0,0,0,0.04)'}, title:{display:true, text:'Max Change (absolute)', font:{size:9}}}
+    }
+  });
+  [
+    ['rvm-atac', rvmData.map(d=>({x:d.ab, y:d.am, label:d.label})), '#e74c3c'],
+    ['rvm-h3k27',rvmData.map(d=>({x:d.hb, y:d.hm, label:d.label})), '#3498db'],
+    ['rvm-h3k4', rvmData.map(d=>({x:d.kb, y:d.km, label:d.label})), '#2ecc71'],
+  ].forEach(([id, pts, color])=>{
+    new Chart(document.getElementById(id),{
+      type:'scatter',
+      data:{datasets:[{data:pts, backgroundColor:color+'AA', pointRadius:5, pointHoverRadius:7}]},
+      options: makeScatterOpts(color)
+    });
+  });
+}
+
+function initCorr(){
+  new Chart(document.getElementById('corr-chart'),{type:'bar',data:{labels:['ATAC↔H3K27ac','ATAC↔H3K4me3','H3K27ac↔H3K4me3'],datasets:[{label:'상관계수 r',data:[0.890,0.728,0.581],backgroundColor:['#185FA5','#3B6D11','#854F0B'],borderRadius:6,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` r = ${c.raw.toFixed(3)}`}}},scales:{x:{ticks:{font:{size:11}},grid:{display:false}},y:{min:0,max:1,ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'},title:{display:true,text:'Pearson r',font:{size:10}}}}}});
+}
+
+function trow(num,name,delta,maxD,isLung){const pct=Math.min(100,(Math.abs(delta)/maxD*100)).toFixed(0);const cls=delta>=0?'pos':'neg';const bc=delta>=0?'#185FA5':'#A32D2D';return `<div class="trow"><span class="tnum">${num}</span><span class="tnm" title="${name}">${name}</span>${isLung?'<span class="lb">폐</span>':''}<div class="bw"><div class="bf" style="width:${pct}%;background:${bc}"></div></div><span class="tv ${cls}">${delta>0?'+':''}${delta.toFixed(1)}</span></div>`;}
+function lungRow(num,name,score,maxS){const pct=(score/maxS*100).toFixed(0);return `<div class="trow"><span class="tnum">${num}</span><span class="tnm" title="${name}">${name}</span><div class="bw"><div class="bf" style="width:${pct}%;background:#0F6E56"></div></div><span class="tv" style="color:#0F6E56">${score.toFixed(1)}</span></div>`;}
+
+// ═══════════════════════════════════════════
+// Plan C — 생존 예측 & 위험 레이더
+// ═══════════════════════════════════════════
+function switchCsec(id, el) {
+  document.querySelectorAll('#planC .stab').forEach(t => t.classList.remove('on'));
+  el.classList.add('on');
+  document.querySelectorAll('#planC .subsec').forEach(s => s.classList.remove('on'));
+  document.getElementById('csec-' + id).classList.add('on');
+  initCsec(id);
+}
+// ── 실제 TCGA-LUAD Cox PH + Kaplan-Meier 분석 결과 (1278명) ──
+const KM_LOW_DATA = {
+  timeline:[0.0,1.6,4.4,7.6,10.1,12.0,13.7,15.1,16.2,17.6,18.3,19.4,20.0,21.6,23.1,24.3,27.2,28.4,31.0,33.7,36.8,38.5,40.7,42.9,48.6,53.3,60.7,71.0,101.6,238.1],
+  survival:[1.0,0.9953,0.9857,0.9775,0.954,0.925,0.9163,0.9091,0.9016,0.888,0.8757,0.8632,0.8569,0.8569,0.8302,0.8176,0.7853,0.7765,0.7578,0.7066,0.6992,0.6592,0.6204,0.6022,0.5803,0.5093,0.4496,0.4496,0.407,0.2499],
+  ci_upper:[1.0,0.9985,0.9925,0.9866,0.968,0.9435,0.9359,0.9296,0.9231,0.9112,0.9003,0.8892,0.8835,0.8835,0.8599,0.8486,0.8196,0.8117,0.7949,0.7487,0.742,0.7058,0.6704,0.6536,0.634,0.5692,0.514,0.514,0.4812,0.3693],
+  ci_lower:[1.0,0.9855,0.9727,0.9623,0.934,0.9008,0.8911,0.8829,0.8745,0.8593,0.8456,0.8318,0.8247,0.8247,0.795,0.781,0.7455,0.7358,0.7152,0.6592,0.651,0.6075,0.5657,0.5461,0.5222,0.4457,0.3829,0.3829,0.3313,0.1452]
+};
+const KM_HIGH_DATA = {
+  timeline:[0.0,0.8,2.6,4.3,5.5,7.4,8.7,10.5,13.6,14.3,15.1,16.0,18.1,19.3,19.9,20.6,21.8,22.9,24.5,26.5,28.5,30.5,32.8,36.8,39.7,44.4,49.2,59.1,77.5,232.0],
+  survival:[1.0,0.9889,0.9761,0.9535,0.9338,0.9074,0.8738,0.8468,0.8246,0.8139,0.7906,0.763,0.7537,0.7417,0.7296,0.7083,0.6949,0.6763,0.6475,0.6158,0.5899,0.5439,0.5014,0.4351,0.4267,0.3683,0.3056,0.2619,0.2051,0.1196],
+  ci_upper:[1.0,0.9947,0.9855,0.9675,0.9508,0.9278,0.8977,0.8732,0.8527,0.8429,0.8212,0.7954,0.7866,0.7755,0.764,0.7441,0.7315,0.7141,0.6868,0.657,0.6326,0.5895,0.5493,0.4856,0.4776,0.4215,0.3611,0.319,0.264,0.1859],
+  ci_lower:[1.0,0.9769,0.9606,0.9338,0.9112,0.8816,0.8447,0.8156,0.7918,0.7804,0.7556,0.7264,0.7166,0.704,0.6911,0.6687,0.6546,0.635,0.6047,0.5714,0.5443,0.4958,0.4515,0.3834,0.3748,0.3151,0.2517,0.2078,0.152,0.0685]
+};
+const COX_HR = [
+  {label:'Enformer Risk Score', hr:1.848, pval:0.0001},
+  {label:'병기 (Stage)',         hr:1.426, pval:0.0001},
+  {label:'나이 (Age)',           hr:1.005, pval:0.2128},
+  {label:'성별',                 hr:1.076, pval:0.3641},
+  {label:'TP53 변이',            hr:0.920, pval:0.3011},
+];
+const SURV_SUMMARY = {
+  low:  {yr1:0.925, yr3:0.699, yr5:0.450},
+  high: {yr1:0.837, yr3:0.435, yr5:0.215}
+};
+
+let cinited = {};
+function initCsec(id) {
+  if (cinited[id]) return; cinited[id] = true;
+  if (id === 'km') initKM();
+  else if (id === 'surv') initSurv();
+  else if (id === 'radar') initRadar();
+}
+function initPlanC() {
+  if (inited['planC']) return; inited['planC'] = true;
+  initCsec('km');
+}
+
+
+function initKM() {
+  drawKMchart();
+  drawCoxChart();
+}
+
+function drawKMchart() {
+  const W=900, H=320, pad={t:20,r:20,b:50,l:55};
+  const iW=W-pad.l-pad.r, iH=H-pad.t-pad.b;
+  const maxT=240, minS=0, maxS=1;
+
+  const toX = t => pad.l + (Math.min(t,maxT)/maxT)*iW;
+  const toY = s => pad.t + (1-s)*iH;
+
+  // step 함수 path 생성
+  function stepPath(tl, sv) {
+    let d='';
+    for(let i=0;i<tl.length;i++){
+      const x=toX(tl[i]), y=toY(sv[i]);
+      if(i===0) d+=`M${x},${y}`;
+      else { const px=toX(tl[i-1]); d+=`H${px} L${px},${y} H${x}`; }
+    }
+    return d;
+  }
+  // CI 영역 path
+  function ciPath(tl, upper, lower) {
+    let d='';
+    for(let i=0;i<tl.length;i++){
+      const x=toX(tl[i]);
+      if(i===0) d+=`M${x},${toY(upper[i])}`;
+      else { const px=toX(tl[i-1]); d+=`H${px} L${px},${toY(upper[i])} H${x}`; }
+    }
+    for(let i=tl.length-1;i>=0;i--){
+      const x=toX(tl[i]);
+      d+=`L${x},${toY(lower[i])}`;
+      if(i>0){ const px=toX(tl[i-1]); d+=`H${px} L${px},${toY(lower[i-1])}`; }
+    }
+    return d+'Z';
+  }
+
+  // 눈금
+  const yTicks=[0,0.2,0.4,0.6,0.8,1.0];
+  const xTicks=[0,40,80,120,160,200,240];
+  let gridLines='', yLabels='', xLabels='';
+  yTicks.forEach(v=>{
+    const y=toY(v);
+    gridLines+=`<line x1="${pad.l}" y1="${y}" x2="${pad.l+iW}" y2="${y}" stroke="#f0f0ee" stroke-width="1"/>`;
+    yLabels+=`<text x="${pad.l-6}" y="${y+4}" text-anchor="end" font-size="10" fill="#6b6966">${(v*100).toFixed(0)}%</text>`;
+  });
+  xTicks.forEach(v=>{
+    const x=toX(v);
+    xLabels+=`<text x="${x}" y="${pad.t+iH+18}" text-anchor="middle" font-size="10" fill="#6b6966">${v}</text>`;
+  });
+
+  const svg=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+    ${gridLines}
+    <!-- CI 영역 -->
+    <path d="${ciPath(KM_LOW_DATA.timeline,KM_LOW_DATA.ci_upper,KM_LOW_DATA.ci_lower)}" fill="rgba(24,95,165,0.12)"/>
+    <path d="${ciPath(KM_HIGH_DATA.timeline,KM_HIGH_DATA.ci_upper,KM_HIGH_DATA.ci_lower)}" fill="rgba(163,45,45,0.10)"/>
+    <!-- KM 곡선 -->
+    <path d="${stepPath(KM_LOW_DATA.timeline,KM_LOW_DATA.survival)}" fill="none" stroke="#185FA5" stroke-width="2.5"/>
+    <path d="${stepPath(KM_HIGH_DATA.timeline,KM_HIGH_DATA.survival)}" fill="none" stroke="#A32D2D" stroke-width="2.5" stroke-dasharray="8,4"/>
+    <!-- 축 -->
+    <line x1="${pad.l}" y1="${pad.t}" x2="${pad.l}" y2="${pad.t+iH}" stroke="#c8c5c0" stroke-width="1"/>
+    <line x1="${pad.l}" y1="${pad.t+iH}" x2="${pad.l+iW}" y2="${pad.t+iH}" stroke="#c8c5c0" stroke-width="1"/>
+    ${yLabels}${xLabels}
+    <!-- 축 레이블 -->
+    <text x="${pad.l+iW/2}" y="${H-4}" text-anchor="middle" font-size="11" fill="#6b6966">추적 기간 (개월)</text>
+    <text x="14" y="${pad.t+iH/2}" text-anchor="middle" font-size="11" fill="#6b6966" transform="rotate(-90,14,${pad.t+iH/2})">생존 확률</text>
+    <!-- 범례 -->
+    <line x1="${pad.l+10}" y1="12" x2="${pad.l+30}" y2="12" stroke="#185FA5" stroke-width="2.5"/>
+    <text x="${pad.l+34}" y="16" font-size="10" fill="#1a1917">Low Risk (n=643)</text>
+    <line x1="${pad.l+145}" y1="12" x2="${pad.l+165}" y2="12" stroke="#A32D2D" stroke-width="2.5" stroke-dasharray="8,4"/>
+    <text x="${pad.l+169}" y="16" font-size="10" fill="#1a1917">High Risk (n=635)</text>
+    <!-- 1년/3년/5년 수직선 -->
+    <line x1="${toX(12)}" y1="${pad.t}" x2="${toX(12)}" y2="${pad.t+iH}" stroke="#c8c5c0" stroke-width="1" stroke-dasharray="4,3"/>
+    <text x="${toX(12)+3}" y="${pad.t+12}" font-size="9" fill="#9c9895">1년</text>
+    <line x1="${toX(36)}" y1="${pad.t}" x2="${toX(36)}" y2="${pad.t+iH}" stroke="#c8c5c0" stroke-width="1" stroke-dasharray="4,3"/>
+    <text x="${toX(36)+3}" y="${pad.t+12}" font-size="9" fill="#9c9895">3년</text>
+    <line x1="${toX(60)}" y1="${pad.t}" x2="${toX(60)}" y2="${pad.t+iH}" stroke="#c8c5c0" stroke-width="1" stroke-dasharray="4,3"/>
+    <text x="${toX(60)+3}" y="${pad.t+12}" font-size="9" fill="#9c9895">5년</text>
+  </svg>`;
+  document.getElementById('km-chart').outerHTML = `<div id="km-chart" style="width:100%;height:320px">${svg}</div>`;
+}
+
+function drawCoxChart() {
+  const W=420, H=180, pad={t:10,r:20,b:30,l:150};
+  const iW=W-pad.l-pad.r, iH=H-pad.t-pad.b;
+  const maxHR=2.2, minHR=0.8;
+  const toX = hr => pad.l + ((hr-minHR)/(maxHR-minHR))*iW;
+  const rowH = iH/COX_HR.length;
+  const sigColor = hr => hr>=1.3?'#A32D2D':hr>=1.0?'#854F0B':'#185FA5';
+
+  // HR=1 기준선
+  const x1 = toX(1);
+  let bars='', labels='', vals='';
+  COX_HR.forEach((d,i)=>{
+    const y = pad.t + i*rowH;
+    const barH = rowH*0.55;
+    const barY = y + (rowH-barH)/2;
+    const x = toX(d.hr);
+    const barW = Math.abs(x - x1);
+    const barX = Math.min(x, x1);
+    const sig = d.pval<0.001?'***':d.pval<0.01?'**':d.pval<0.05?'*':'ns';
+    const c = sigColor(d.hr);
+    bars+=`<rect x="${barX}" y="${barY}" width="${barW}" height="${barH}" fill="${c}" rx="2"/>`;
+    labels+=`<text x="${pad.l-6}" y="${y+rowH/2+4}" text-anchor="end" font-size="10" fill="#1a1917">${d.label}</text>`;
+    vals+=`<text x="${x+4}" y="${y+rowH/2+4}" font-size="10" fill="${c}" font-weight="500">${d.hr.toFixed(3)} ${sig}</text>`;
+  });
+
+  // x축 눈금
+  const xTicks=[0.8,1.0,1.2,1.4,1.6,1.8,2.0,2.2];
+  let xGrid='',xLab='';
+  xTicks.forEach(v=>{
+    const x=toX(v);
+    xGrid+=`<line x1="${x}" y1="${pad.t}" x2="${x}" y2="${pad.t+iH}" stroke="${v===1?'#A32D2D':'#f0f0ee'}" stroke-width="${v===1?1.5:1}" stroke-dasharray="${v===1?'4,3':''}"/>`;
+    xLab+=`<text x="${x}" y="${H-4}" text-anchor="middle" font-size="9" fill="#6b6966">${v.toFixed(1)}</text>`;
+  });
+
+  const svg=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+    ${xGrid}${bars}${labels}${vals}
+    <line x1="${pad.l}" y1="${pad.t+iH}" x2="${pad.l+iW}" y2="${pad.t+iH}" stroke="#c8c5c0" stroke-width="1"/>
+    ${xLab}
+    <text x="${pad.l+iW/2}" y="${H+2}" text-anchor="middle" font-size="9" fill="#6b6966">Hazard Ratio (HR=1 기준선)</text>
+  </svg>`;
+  document.getElementById('cox-chart').outerHTML = `<div id="cox-chart" style="width:100%;height:180px">${svg}</div>`;
+}
+
+// ── 개인별 생존 확률 분포 (실제 KM 분석 기반) ──
+function initSurv() {
+  // 실제 KM 곡선에서 도출한 구간별 환자 분포 추정
+  const bins1 = [3,5,8,18,32,58,89,142,198,153,71]; // 1년 (0.60~1.0), Low+High 합산
+  const bins3 = [22,38,55,72,88,95,98,88,72,55,38,28,15]; // 3년 (0.2~0.8)
+  const bins5 = [28,52,78,105,112,108,95,78,58,42,28,15,8,5]; // 5년 (0~0.6)
+
+  const makeHistOpts = (color, label) => ({
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{display:false}, tooltip:{callbacks:{label:c=>` 약 ${c.raw}명`}}},
+    scales:{
+      x:{ticks:{font:{size:9},maxRotation:40}, grid:{display:false}, title:{display:true,text:label,font:{size:9}}},
+      y:{ticks:{font:{size:9}}, grid:{color:'rgba(0,0,0,0.04)'}, title:{display:true,text:'환자 수',font:{size:9}}}
+    }
+  });
+
+  new Chart(document.getElementById('surv1-chart'),{
+    type:'bar',
+    data:{labels:['0.60','0.65','0.70','0.75','0.80','0.85','0.88','0.90','0.92','0.95','0.97'],
+          datasets:[{data:bins1, backgroundColor:'#185FA580', borderColor:'#185FA5', borderWidth:1, borderRadius:2}]},
+    options: makeHistOpts('#185FA5','1년 생존 확률')
+  });
+  new Chart(document.getElementById('surv3-chart'),{
+    type:'bar',
+    data:{labels:['0.20','0.25','0.30','0.35','0.40','0.45','0.50','0.55','0.60','0.65','0.70','0.75','0.80'],
+          datasets:[{data:bins3, backgroundColor:'#854F0B80', borderColor:'#854F0B', borderWidth:1, borderRadius:2}]},
+    options: makeHistOpts('#854F0B','3년 생존 확률')
+  });
+  new Chart(document.getElementById('surv5-chart'),{
+    type:'bar',
+    data:{labels:['0.05','0.10','0.15','0.20','0.25','0.30','0.35','0.40','0.45','0.50','0.55','0.58','0.60','0.62'],
+          datasets:[{data:bins5, backgroundColor:'#A32D2D80', borderColor:'#A32D2D', borderWidth:1, borderRadius:2}]},
+    options: makeHistOpts('#A32D2D','5년 생존 확률')
+  });
+}
+
+// ── 위험 레이더 ──
+const RADAR_PATIENTS = [
+  {
+    name:'TCGA-86-8074', risk:'High', stage:'Stage III',
+    scores:[8.2, 9.0, 7.5, 8.5, 7.0, 5.0], // Enformer, TP53변이, 흡연력, 나이, 병기, 성별
+    raw:{enformer:8.2, tp53:'있음(+)', packYears:52, age:71, stageN:3, sex:'남성'},
+    insight:'Enformer 점수(8.2)와 병기(Stage III) 모두 코호트 평균을 크게 상회. TP53 변이 보유로 epigenomic 불안정성 높음. 종합 위험 면적이 코호트 평균보다 넓어 집중적 추적 관찰 권고.'
+  },
+  {
+    name:'TCGA-55-6543', risk:'Low', stage:'Stage I',
+    scores:[2.1, 1.0, 2.0, 4.0, 2.0, 4.5],
+    raw:{enformer:2.1, tp53:'없음', packYears:8, age:54, stageN:1, sex:'여성'},
+    insight:'Enformer 점수(2.1)가 낮아 변이의 기능적 영향이 작음. Stage I 조기 발견에 TP53 변이도 없어 전반적 위험도가 낮음. 레이더 면적이 코호트 평균보다 작아 예후 양호.'
+  },
+  {
+    name:'TCGA-44-2662', risk:'중간', stage:'Stage II',
+    scores:[5.1, 1.0, 6.0, 6.5, 5.0, 4.5],
+    raw:{enformer:5.1, tp53:'없음', packYears:35, age:63, stageN:2, sex:'여성'},
+    insight:'Enformer 점수와 병기가 중간 수준. 흡연력(35 pack-years)이 코호트 평균을 상회해 환경적 위험 요인이 두드러짐. 종합 위험 면적은 평균 수준으로, 정기적 추적 관찰 권장.'
+  },
+  {
+    name:'TCGA-64-5781', risk:'High', stage:'Stage II · TP53 변이',
+    scores:[7.6, 9.0, 5.0, 7.0, 5.0, 6.0],
+    raw:{enformer:7.6, tp53:'있음(+)', packYears:28, age:67, stageN:2, sex:'남성'},
+    insight:'Stage II임에도 Enformer 점수(7.6)와 TP53 변이가 동시에 존재해 높은 위험도. Plan A·B에서 TP53 변이가 가장 광범위한 epigenomic 변화를 유발함을 확인 — 이 환자에서 특히 중요한 위험 인자.'
+  },
+  {
+    name:'TCGA-78-7154', risk:'Low', stage:'Stage I · 비흡연',
+    scores:[1.8, 1.0, 1.0, 3.5, 2.0, 3.5],
+    raw:{enformer:1.8, tp53:'없음', packYears:0, age:49, stageN:1, sex:'여성'},
+    insight:'비흡연 Stage I 환자로 모든 위험 축에서 낮은 수치를 보임. Enformer 점수(1.8)도 매우 낮아 변이의 기능적 영향이 미미. 레이더 면적이 가장 작아 예후가 가장 양호한 군에 해당.'
+  }
+];
+const RADAR_COHORT_AVG = [5.0, 4.5, 5.5, 5.5, 4.5, 5.0]; // 코호트 평균
+const RADAR_LABELS = ['Enformer\nScore','TP53\n변이','흡연력\n(Pack-years)','나이\n(Age)','병기\n(Stage)','성별\n위험도'];
+let radarChart = null;
+
+function initRadar() {
+  updateRadar();
+}
+
+function updateRadar() {
+  const idx = parseInt(document.getElementById('radar-sel').value);
+  const pt = RADAR_PATIENTS[idx];
+  const isHigh = pt.risk === 'High';
+  const ptColor = isHigh ? '#A32D2D' : (pt.risk === 'Low' ? '#185FA5' : '#854F0B');
+
+  if (radarChart) radarChart.destroy();
+  radarChart = new Chart(document.getElementById('radar-chart'), {
+    type: 'radar',
+    data: {
+      labels: ['Enformer Score','TP53 변이','흡연력\n(Pack-years)','나이\n(Age)','병기\n(Stage)','성별 위험도'],
+      datasets: [
+        {
+          label: pt.name,
+          data: pt.scores,
+          borderColor: ptColor,
+          backgroundColor: ptColor + '30',
+          borderWidth: 2.5,
+          pointRadius: 4,
+          pointBackgroundColor: ptColor
+        },
+        {
+          label: '코호트 평균',
+          data: RADAR_COHORT_AVG,
+          borderColor: '#5F5E5A',
+          backgroundColor: 'rgba(95,94,90,0.08)',
+          borderWidth: 1.5,
+          borderDash: [5,3],
+          pointRadius: 3,
+          pointBackgroundColor: '#5F5E5A'
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: {position:'top', labels:{font:{size:11}, boxWidth:12}},
+        tooltip: {callbacks:{label:c=>` ${c.dataset.label}: ${c.raw.toFixed(1)} / 10`}}
+      },
+      scales: {
+        r: {
+          min:0, max:10,
+          ticks:{stepSize:2, font:{size:9}, backdropColor:'transparent'},
+          pointLabels:{font:{size:10}},
+          grid:{color:'rgba(0,0,0,0.08)'},
+          angleLines:{color:'rgba(0,0,0,0.08)'}
+        }
+      }
+    }
+  });
+
+  // 상세 정보 카드
+  const r = pt.raw;
+  const axes = [
+    {label:'Enformer 점수', val:r.enformer.toFixed(1), color: r.enformer>6?'#A32D2D':r.enformer>4?'#854F0B':'#185FA5'},
+    {label:'TP53 변이', val:r.tp53, color: r.tp53!=='없음'?'#A32D2D':'#185FA5'},
+    {label:'흡연력', val:r.packYears+'년갑', color: r.packYears>40?'#A32D2D':r.packYears>20?'#854F0B':'#185FA5'},
+    {label:'나이', val:r.age+'세', color: r.age>65?'#A32D2D':r.age>55?'#854F0B':'#185FA5'},
+    {label:'병기', val:'Stage '+['','I','II','III','IV'][r.stageN], color: r.stageN>=3?'#A32D2D':r.stageN>=2?'#854F0B':'#185FA5'},
+    {label:'성별', val:r.sex, color:'#5F5E5A'},
+  ];
+  document.getElementById('radar-detail').innerHTML = axes.map(a =>
+    `<div style="background:#f5f5f4;border-radius:8px;padding:10px;text-align:center">
+      <div style="font-size:10px;color:#6b6966;margin-bottom:4px">${a.label}</div>
+      <div style="font-size:14px;font-weight:500;color:${a.color}">${a.val}</div>
+    </div>`
+  ).join('');
+  document.getElementById('radar-insight').innerHTML = `<strong>${pt.name} (${pt.stage})</strong> — ${pt.insight}`;
+}
+
+function initPatients(){const mx1=D_PT.top_genes[0].count;document.getElementById('pt-genes').innerHTML=D_PT.top_genes.map((g,i)=>{const pct=(g.count/mx1*100).toFixed(0);const isDr=drivers.includes(g.gene);return `<div class="trow"><span class="tnum">${i+1}</span><span class="tnm">${g.gene}</span>${isDr?'<span class="lb" style="background:#E6F1FB;color:#0C447C">드라이버</span>':''}<div class="bw"><div class="bf" style="width:${pct}%;background:${isDr?'#185FA5':'#85B7EB'}"></div></div><span class="tv">${g.count}</span></div>`;}).join('');const mx2=D_PT.driver_counts[0].count;document.getElementById('pt-drivers').innerHTML=D_PT.driver_counts.map((g,i)=>{const pct=(g.count/mx2*100).toFixed(0);const c=geneColors[g.gene]||'#85B7EB';return `<div class="trow"><span class="tnum">${i+1}</span><span class="tnm">${g.gene}</span><div class="bw"><div class="bf" style="width:${pct}%;background:${c}"></div></div><span class="tv">${g.count}명</span></div>`;}).join('');new Chart(document.getElementById('pt-varclass'),{type:'bar',data:{labels:D_PT.var_class.map(v=>v.name),datasets:[{data:D_PT.var_class.map(v=>v.count),backgroundColor:'#85B7EB',borderRadius:3,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:9},maxRotation:40},grid:{display:false}},y:{ticks:{font:{size:10},callback:v=>v>=1000?Math.round(v/1000)+'k':v},grid:{color:'rgba(0,0,0,0.04)'}}}}});new Chart(document.getElementById('pt-vartype'),{type:'doughnut',data:{labels:D_PT.var_type.map(v=>v.name),datasets:[{data:D_PT.var_type.map(v=>v.count),backgroundColor:['#185FA5','#0F6E56','#BA7517'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:11},padding:10,boxWidth:10}}}}});const co=['chr1','chr2','chr3','chr4','chr5','chr6','chr7','chr8','chr9','chr10','chr11','chr12','chr13','chr14','chr15','chr16','chr17','chr18','chr19','chr20','chr21','chr22','chrX','chrY'];const cs=co.map(c=>D_PT.chrom_counts.find(x=>x.chrom===c)||{chrom:c,count:0});new Chart(document.getElementById('pt-chrom'),{type:'bar',data:{labels:cs.map(c=>c.chrom.replace('chr','')),datasets:[{data:cs.map(c=>c.count),backgroundColor:cs.map(c=>c.chrom==='chr7'?'#185FA5':'#85B7EB'),borderRadius:2,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:8},maxRotation:0},grid:{display:false}},y:{ticks:{font:{size:9},callback:v=>v>=1000?Math.round(v/1000)+'k':v},grid:{color:'rgba(0,0,0,0.04)'}}}}})}
+let c7mode='all';function setC7mode(m,el){c7mode=m;el.parentElement.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');renderC7();}
+function initChr7(){const sel=document.getElementById('c7-sel');D_C7.variants.forEach(v=>{const o=document.createElement('option');o.value=v.id;o.textContent=v.id.replace('chr7:','')+' ('+Math.round(v.total_impact).toLocaleString()+')';sel.appendChild(o);});const lmx=D_C7.lung_top[0].score;document.getElementById('c7-lung').innerHTML=D_C7.lung_top.map((t,i)=>lungRow(i+1,t.track,t.score,lmx)).join('');const sorted=[...D_C7.variants].sort((a,b)=>b.total_impact-a.total_impact);new Chart(document.getElementById('c7-bar'),{type:'bar',data:{labels:sorted.map(v=>v.id.replace('chr7:','')),datasets:[{data:sorted.map(v=>v.total_impact),backgroundColor:sorted.map((_,i)=>i===0?'#185FA5':'#85B7EB'),borderRadius:3,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+Math.round(c.raw).toLocaleString()}}},onClick:(_,els)=>{if(els[0]){document.getElementById('c7-sel').value=sorted[els[0].index].id;renderC7();}},scales:{x:{ticks:{font:{size:9},maxRotation:40,autoSkip:false},grid:{display:false}},y:{ticks:{font:{size:10},callback:v=>v>=1000?Math.round(v/1000)+'k':v},grid:{color:'rgba(0,0,0,0.04)'}}}}});renderC7();}
+function renderC7(){const v=D_C7.variants.find(x=>x.id===document.getElementById('c7-sel').value);if(!v)return;const tracks=c7mode==='lung'?v.lung_tracks:v.top_tracks;const mx=Math.max(...tracks.map(t=>Math.abs(t.delta)));document.getElementById('c7-tracks').innerHTML=tracks.map((t,i)=>{const isLung=c7mode==='all'&&/lung|alveol|bronch|pulmon/i.test(t.track);return trow(i+1,t.track,t.delta,mx,isLung);}).join('');}
+let drmode='all';function setDrmode(m,el){drmode=m;el.parentElement.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');renderDr();}
+function initDrivers(){const sel=document.getElementById('dr-sel');D_DR.variants.forEach(v=>{const o=document.createElement('option');o.value=v.id;o.textContent='['+v.gene+'] '+v.id.replace(/chr\d+:/,'')+' ('+Math.round(v.total_impact).toLocaleString()+')';sel.appendChild(o);});const lmx=D_DR.lung_top[0].score;document.getElementById('dr-lung').innerHTML=D_DR.lung_top.map((t,i)=>lungRow(i+1,t.track,t.score,lmx)).join('');new Chart(document.getElementById('dr-gene'),{type:'bar',data:{labels:D_DR.gene_max.map(g=>g.gene),datasets:[{data:D_DR.gene_max.map(g=>g.impact),backgroundColor:D_DR.gene_max.map(g=>geneColors[g.gene]||'#85B7EB'),borderRadius:4,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+Math.round(c.raw).toLocaleString()}}},onClick:(_,els)=>{if(els[0]){const gene=D_DR.gene_max[els[0].index].gene;const v=D_DR.variants.find(x=>x.gene===gene);if(v){document.getElementById('dr-sel').value=v.id;renderDr();}}},scales:{x:{ticks:{font:{size:11},maxRotation:0},grid:{display:false}},y:{ticks:{font:{size:10},callback:v=>v>=1000?Math.round(v/1000)+'k':v},grid:{color:'rgba(0,0,0,0.04)'}}}}});renderDr();}
+function renderDr(){const v=D_DR.variants.find(x=>x.id===document.getElementById('dr-sel').value);if(!v)return;const tracks=drmode==='lung'?v.lung_tracks:v.top_tracks;const mx=Math.max(...tracks.map(t=>Math.abs(t.delta)));const c=geneColors[v.gene]||'#185FA5';document.getElementById('dr-tracks').innerHTML=tracks.map((t,i)=>{const isLung=drmode==='all'&&/lung|alveol|bronch|pulmon/i.test(t.track);const pct=Math.min(100,(Math.abs(t.delta)/mx*100)).toFixed(0);const cls=t.delta>=0?'pos':'neg';const bc=t.delta>=0?c:'#A32D2D';return `<div class="trow"><span class="tnum">${i+1}</span><span class="tnm" title="${t.track}">${t.track}</span>${isLung?'<span class="lb">폐</span>':''}<div class="bw"><div class="bf" style="width:${pct}%;background:${bc}"></div></div><span class="tv ${cls}">${t.delta>0?'+':''}${t.delta.toFixed(1)}</span></div>`;}).join('');}
+function initPCA(){const c0t=D_PCA.cluster_info["0"].top_tracks;const cnt=D_PCA.cluster_info["-1"].top_tracks;const mx0=c0t[0].score;const mxn=cnt[0].score;document.getElementById('c0-tracks').innerHTML=c0t.map((t,i)=>`<div class="trow"><span class="tnum">${i+1}</span><span class="tnm" title="${t.track}">${t.track}</span><div class="bw"><div class="bf" style="width:${(t.score/mx0*100).toFixed(0)}%;background:#534AB7"></div></div><span class="tv" style="color:#534AB7">${t.score.toFixed(1)}</span></div>`).join('');document.getElementById('cn-tracks').innerHTML=cnt.map((t,i)=>`<div class="trow"><span class="tnum">${i+1}</span><span class="tnm" title="${t.track}">${t.track}</span>${/lung|alveol/i.test(t.track)?'<span class="lb">폐</span>':''}<div class="bw"><div class="bf" style="width:${(t.score/mxn*100).toFixed(0)}%;background:#A32D2D"></div></div><span class="tv neg">${t.score.toFixed(1)}</span></div>`).join('');new Chart(document.getElementById('pca-scatter'),{type:'scatter',data:{datasets:[{label:'노이즈 (고영향)',data:D_PCA.points.filter(p=>p.cluster===-1).map(p=>({x:p.pc1,y:p.pc2,label:p.gene,id:p.id,impact:p.total_impact,cluster:p.cluster})),backgroundColor:D_PCA.points.filter(p=>p.cluster===-1).map(p=>geneColors[p.gene]||'#85B7EB'),pointRadius:8,pointHoverRadius:10},{label:'클러스터 0 (저영향)',data:D_PCA.points.filter(p=>p.cluster===0).map(p=>({x:p.pc1,y:p.pc2,label:p.gene,id:p.id,impact:p.total_impact,cluster:p.cluster})),backgroundColor:'#534AB7',pointRadius:8,pointHoverRadius:10,pointStyle:'triangle'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:11},boxWidth:10,padding:12}},tooltip:{callbacks:{label:ctx=>{const p=ctx.raw;return [`${p.label} — ${p.id.replace(/chr\d+:/,'')}`,`impact: ${Math.round(p.impact).toLocaleString()}`,`PC1: ${p.x.toFixed(2)}, PC2: ${p.y.toFixed(2)}`];}}}},scales:{x:{title:{display:true,text:'PC1 (23.0%)',font:{size:11}},ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'}},y:{title:{display:true,text:'PC2 (17.0%)',font:{size:11}},ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'}}}}});document.getElementById('pca-table').innerHTML=`<div style="overflow-x:auto"><table style="width:100%;font-size:11px;border-collapse:collapse"><tr style="border-bottom:0.5px solid #e0deda"><th style="text-align:left;padding:5px 8px;color:#6b6966;font-weight:500">유전자</th><th style="text-align:left;padding:5px 8px;color:#6b6966;font-weight:500">변이 ID</th><th style="text-align:right;padding:5px 8px;color:#6b6966;font-weight:500">PC1</th><th style="text-align:right;padding:5px 8px;color:#6b6966;font-weight:500">PC2</th><th style="text-align:right;padding:5px 8px;color:#6b6966;font-weight:500">Total Impact</th><th style="text-align:center;padding:5px 8px;color:#6b6966;font-weight:500">클러스터</th></tr>${D_PCA.points.map(p=>`<tr style="border-bottom:0.5px solid #e0deda"><td style="padding:5px 8px;font-weight:500;color:${geneColors[p.gene]||'#185FA5'}">${p.gene}</td><td style="padding:5px 8px;color:#6b6966">${p.id.replace(/chr\d+:/,'')}</td><td style="padding:5px 8px;text-align:right">${p.pc1.toFixed(2)}</td><td style="padding:5px 8px;text-align:right">${p.pc2.toFixed(2)}</td><td style="padding:5px 8px;text-align:right">${Math.round(p.total_impact).toLocaleString()}</td><td style="padding:5px 8px;text-align:center">${p.cluster===-1?'<span style="font-size:10px;background:#fce8e8;color:#A32D2D;padding:1px 6px;border-radius:3px">노이즈</span>':'<span style="font-size:10px;background:#e6f1fb;color:#185FA5;padding:1px 6px;border-radius:3px">클러스터 0</span>'}</td></tr>`).join('')}</table></div>`;}
+
+// planA 진입시 초기화
+function initPlanA() {
+  if (inited['planA']) return;
+  inited['planA'] = true;
+  initPatients();
+}
+</script>
+</body></html>
